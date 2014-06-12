@@ -226,15 +226,19 @@ Pitch Sound_to_Pitch_any (Sound me,
 		autoNUMvector <long> imax (1, maxnCandidates);
 		autoNUMvector <double> localMean (1, my ny);
 
+#ifndef PRAAT_LIB
 		autoMelderProgress progress (L"Sound to Pitch...");
+#endif
 
 		for (iframe = 1; iframe <= nFrames; iframe ++) {
 			Pitch_Frame pitchFrame = & thy frame [iframe];
 			double t = Sampled_indexToX (thee.peek(), iframe), localPeak;
 			long leftSample = Sampled_xToLowIndex (me, t), rightSample = leftSample + 1;
 			long startSample, endSample;
+#ifndef PRAAT_LIB
 			Melder_progress (0.1 + (0.8 * iframe) / (nFrames + 1),
 				L"Sound to Pitch: analysis of frame ", Melder_integer (iframe), L" out of ", Melder_integer (nFrames));
+#endif
 
 			for (long channel = 1; channel <= my ny; channel ++) {
 				/*
@@ -416,7 +420,8 @@ Pitch Sound_to_Pitch_any (Sound me,
 			/*
 			 * Second pass: for extra precision, maximize sin(x)/x interpolation ('sinc').
 			 */
-			for (long i = 2; i <= pitchFrame->nCandidates; i ++) {
+
+			 for (long i = 2; i <= pitchFrame->nCandidates; i ++) {
 				if (method != AC_HANNING || pitchFrame->candidate[i].frequency > 0.0 / my dx) {
 					double xmid, ymid;
 					long offset = - brent_ixmax - 1;
@@ -428,9 +433,14 @@ Pitch Sound_to_Pitch_any (Sound me,
 					pitchFrame->candidate[i].strength = ymid;
 				}
 			}
+
+
 		}   /* Next frame. */
 
+#ifndef PRAAT_LIB
 		Melder_progress (0.95, L"Sound to Pitch: path finder");   // progress (0.95, L"Sound to Pitch: path finder");
+#endif
+
 		Pitch_pathFinder (thee.peek(), silenceThreshold, voicingThreshold,
 			octaveCost, octaveJumpCost, voicedUnvoicedCost, ceiling, Melder_debug == 31 ? true : false);
 
