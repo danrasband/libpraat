@@ -61,10 +61,4 @@ int main (int argc, char *argv []) {
 	return 0;
 }
 
-#ifdef PRAAT_LIB
-PRAAT_LIB_EXPORT void praat_lib_init() {
-	
-}
-#endif
-
 /* End of file main_Praat.cpp */

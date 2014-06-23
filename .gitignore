@@ -1,4 +1,6 @@
 *\~
+*.o
+*.a
 praat
 praat.dll
 libpraat.so

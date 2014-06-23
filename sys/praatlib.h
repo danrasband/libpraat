@@ -20,4 +20,6 @@
 #endif
 #endif
 
+PRAAT_LIB_EXPORT void praat_lib_init();
+
 #endif

@@ -50,6 +50,10 @@
 	#include <gdk/gdkx.h>
 #endif
 
+#ifdef PRAAT_LIB
+	#include "praatlib.h"
+#endif
+
 #define EDITOR  theCurrentPraatObjects -> list [IOBJECT]. editors
 
 #define WINDOW_WIDTH 520
@@ -1379,6 +1383,147 @@ void praat_init (const char *title, unsigned int argc, char **argv) {
 	trace ("before picture window shows: locale is %s", setlocale (LC_ALL, NULL));
 	if (! praatP.dontUsePictureWindow) praat_picture_init ();
 	trace ("after picture window shows: locale is %s", setlocale (LC_ALL, NULL));
+}
+
+void praat_lib_init() 
+{
+	static char truncatedTitle [300];   /* Static because praatP.title will point into it. */
+	#if defined (UNIX)
+		setlocale (LC_ALL, "C");
+	#elif defined (_WIN32)
+		setlocale (LC_ALL, "C");   // said to be superfluous
+	#elif defined (macintosh)
+		setlocale (LC_ALL, "en_US");   // required to make swprintf work correctly; the default "C" locale does not do that!
+	#endif
+	char *p;
+	#ifdef macintosh
+		SInt32 macSystemVersion;
+		Gestalt ('sysv', & macSystemVersion);
+		Melder_systemVersion = macSystemVersion;
+	#endif
+	/*
+		Initialize numerical libraries.
+	*/
+	NUMmachar ();
+	NUMinit ();
+	Melder_alloc_init ();
+	/*
+		Remember the current directory. Only useful for scripts run from batch.
+	*/
+	Melder_rememberShellDirectory ();
+
+	/*
+	 * Install the preferences of the Praat shell, and set the defaults.
+	 */
+	praat_statistics_prefs ();   // Number of sessions, memory used...
+	praat_picture_prefs ();   // Font...
+	structEditor     :: f_preferences ();   // Erase picture first...
+	structHyperPage  :: f_preferences ();   // Font...
+	Site_prefs ();   // Print command...
+	Melder_audio_prefs ();   // Use speaker (Sun & HP), output gain (HP)...
+	Melder_textEncoding_prefs ();
+	Printer_prefs ();   // Paper size, printer command...
+	structTextEditor :: f_preferences ();   // Font size...
+
+
+	/*
+	 * Get home directory, e.g. "/home/miep/", or "/Users/miep/", or just "/".
+	 */
+	Melder_getHomeDir (& homeDir);
+	/*
+	 * Get the program's private directory:
+	 *    "/u/miep/.myProg-dir" (Unix)
+	 *    "/Users/miep/Library/Preferences/MyProg Prefs" (Macintosh)
+	 *    "C:\Documents and Settings\Miep\MyProg" (Windows)
+	 * and construct a preferences-file name and a script-buttons-file name like
+	 *    /u/miep/.myProg-dir/prefs5
+	 *    /u/miep/.myProg-dir/buttons5
+	 * or
+	 *    /Users/miep/Library/Preferences/MyProg Prefs/Prefs5
+	 *    /Users/miep/Library/Preferences/MyProg Prefs/Buttons5
+	 * or
+	 *    C:\Documents and Settings\Miep\MyProg\Preferences5.ini
+	 *    C:\Documents and Settings\Miep\MyProg\Buttons5.ini
+	 * On Unix, also create names for process-id and message files.
+	 */
+	{
+		structMelderDir prefParentDir = { { 0 } };   /* Directory under which to store our preferences directory. */
+		wchar_t name [256];
+		Melder_getPrefDir (& prefParentDir);
+		/*
+		 * Make sure that the program's private directory exists.
+		 */
+		#if defined (UNIX)
+			swprintf (name, 256, L".%ls-dir", Melder_utf8ToWcs (programName));   /* For example .myProg-dir */
+		#elif defined (macintosh)
+			swprintf (name, 256, L"%ls Prefs", Melder_utf8ToWcs (praatP.title));   /* For example MyProg Prefs */
+		#elif defined (_WIN32)
+			swprintf (name, 256, L"%ls", Melder_utf8ToWcs (praatP.title));   /* For example MyProg */
+		#endif
+		#if defined (UNIX) || defined (macintosh)
+			Melder_createDirectory (& prefParentDir, name, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		#else
+			Melder_createDirectory (& prefParentDir, name, 0);
+		#endif
+		MelderDir_getSubdir (& prefParentDir, name, & praatDir);
+		#if defined (UNIX)
+			MelderDir_getFile (& praatDir, L"prefs5", & prefsFile);
+			MelderDir_getFile (& praatDir, L"buttons5", & buttonsFile);
+			MelderDir_getFile (& praatDir, L"pid", & pidFile);
+			MelderDir_getFile (& praatDir, L"message", & messageFile);
+			MelderDir_getFile (& praatDir, L"tracing", & tracingFile);
+		#elif defined (_WIN32)
+			MelderDir_getFile (& praatDir, L"Preferences5.ini", & prefsFile);
+			MelderDir_getFile (& praatDir, L"Buttons5.ini", & buttonsFile);
+			MelderDir_getFile (& praatDir, L"Message.txt", & messageFile);
+			MelderDir_getFile (& praatDir, L"Tracing.txt", & tracingFile);
+		#elif defined (macintosh)
+			MelderDir_getFile (& praatDir, L"Prefs5", & prefsFile);
+			MelderDir_getFile (& praatDir, L"Buttons5", & buttonsFile);
+			MelderDir_getFile (& praatDir, L"Tracing.txt", & tracingFile);
+		#endif
+		Melder_tracingToFile (& tracingFile);
+	}
+	#if defined (UNIX)
+		if (! Melder_batch) {
+			/*
+			 * Make sure that the directory /u/miep/.myProg-dir exists,
+			 * and write our process id into the pid file.
+			 * Messages from "sendpraat" are caught very early this way,
+			 * though they will be responded to much later.
+			 */
+			try {
+				autofile f = Melder_fopen (& pidFile, "w");
+				fprintf (f, "%ld", (long) getpid ());
+				f.close (& pidFile);
+			} catch (MelderError) {
+				Melder_clearError ();
+			}
+		}
+	#elif defined (_WIN32)
+		if (! Melder_batch)
+			motif_win_setUserMessageCallback (cb_userMessage);
+	#elif defined (macintosh)
+		#if useCarbon
+			if (! Melder_batch) {
+				motif_mac_setUserMessageCallbackA (cb_userMessageA);
+				motif_mac_setUserMessageCallbackW (cb_userMessageW);
+				Gui_setQuitApplicationCallback (cb_quitApplication);
+			}
+		#else
+			if (! Melder_batch) {
+				mac_setUserMessageCallbackA (cb_userMessageA);
+				mac_setUserMessageCallbackW (cb_userMessageW);
+				Gui_setQuitApplicationCallback (cb_quitApplication);
+			}
+		#endif
+	#endif
+
+	/*
+	 * Make room for commands.
+	 */
+	praat_actions_init ();
+	praat_menuCommands_init ();
 }
 
 static void executeStartUpFile (MelderDir startUpDirectory, const wchar_t *fileNameTemplate) {
