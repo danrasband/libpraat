@@ -62,8 +62,8 @@ int main (int argc, char *argv []) {
 }
 
 #ifdef PRAAT_LIB
-PRAAT_LIB_EXPORT int praat_main(int argc, char *argv []) {
-	return main(argc, argv);
+PRAAT_LIB_EXPORT void praat_lib_init() {
+	
 }
 #endif
 
