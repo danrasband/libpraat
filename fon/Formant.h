@@ -92,12 +92,12 @@ PRAAT_LIB_EXPORT Formant Formant_tracker (Formant me, int numberOfTracks,
 	double dfCost,   /* Per kHz. */
 	double bfCost, double octaveJumpCost);
 
-Table Formant_downto_Table (Formant me, bool includeFrameNumbers,
+PRAAT_LIB_EXPORT Table Formant_downto_Table (Formant me, bool includeFrameNumbers,
 	bool includeTimes, int timeDecimals,
 	bool includeIntensity, int intensityDecimals,
 	bool includeNumberOfFormants, int frequencyDecimals,
 	bool includeBandwidths);
-PRAAT_LIB_EXPORT void Formant_list (Formant me, bool includeFrameNumbers,
+void Formant_list (Formant me, bool includeFrameNumbers,
 	bool includeTimes, int timeDecimals,
 	bool includeIntensity, int intensityDecimals,
 	bool includeNumberOfFormants, int frequencyDecimals,
