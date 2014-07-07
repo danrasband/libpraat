@@ -103,5 +103,10 @@ void Formant_list (Formant me, bool includeFrameNumbers,
 	bool includeNumberOfFormants, int frequencyDecimals,
 	bool includeBandwidths);
 
+#ifdef PRAAT_LIB
+PRAAT_LIB_EXPORT double Formant_getValueAtSample(Formant me, long isample, long which, int units);
+PRAAT_LIB_EXPORT double Formant_getIntensityAtSample(Formant me, long iframe);
+#endif
+
 /* End of file Formant.h */
 #endif
