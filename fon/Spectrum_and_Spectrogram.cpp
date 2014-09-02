@@ -1,6 +1,6 @@
 /* Spectrum_and_Spectrogram.cpp
  *
- * Copyright (C) 1992-2011 David Weenink & Paul Boersma
+ * Copyright (C) 1992-2011,2014 David Weenink & Paul Boersma
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

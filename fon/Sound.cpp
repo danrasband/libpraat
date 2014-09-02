@@ -1,6 +1,6 @@
 /* Sound.cpp
  *
- * Copyright (C) 1992-2012 Paul Boersma
+ * Copyright (C) 1992-2012,2014 Paul Boersma
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -399,8 +399,8 @@ Sound Sound_resample (Sound me, double samplingFrequency, long precision) {
 			double *to = thy z [channel];
 			if (precision <= 1) {
 				for (long i = 1; i <= numberOfSamples; i ++) {
-					double x = thy x1 + (i - 1) * thy dx;   /* Sampled_indexToX (thee, i); */
-					double index = (x - my x1) / my dx + 1;   /* Sampled_xToIndex (me, x); */
+					double x = Sampled_indexToX (thee.peek(), i);
+					double index = Sampled_xToIndex (me, x);
 					long leftSample = floor (index);
 					double fraction = index - leftSample;
 					to [i] = leftSample < 1 || leftSample >= my nx ? 0.0 :
@@ -408,8 +408,8 @@ Sound Sound_resample (Sound me, double samplingFrequency, long precision) {
 				}
 			} else {
 				for (long i = 1; i <= numberOfSamples; i ++) {
-					double x = thy x1 + (i - 1) * thy dx;   /* Sampled_indexToX (thee, i); */
-					double index = (x - my x1) / my dx + 1;   /* Sampled_xToIndex (me, x); */
+					double x = Sampled_indexToX (thee.peek(), i);
+					double index = Sampled_xToIndex (me, x);
 					to [i] = NUM_interpolate_sinc (my z [channel], my nx, index, precision);
 				}
 			}

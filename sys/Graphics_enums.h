@@ -32,11 +32,17 @@ enums_begin (kGraphics_horizontalAlignment, 0)
 enums_end (kGraphics_horizontalAlignment, 2, CENTRE)
 
 enums_begin (kGraphics_resolution, 0)
-	enums_add (kGraphics_resolution, 0, 100, L"100 dpi")
-	enums_add (kGraphics_resolution, 1, 300, L"300 dpi")
-	enums_add (kGraphics_resolution, 2, 360, L"360 dpi")
-	enums_add (kGraphics_resolution, 3, 600, L"600 dpi")
-enums_end (kGraphics_resolution, 3, 100)
+	enums_add (kGraphics_resolution, 0,  96, L"96 dpi")
+	enums_add (kGraphics_resolution, 1, 100, L"100 dpi")
+	enums_add (kGraphics_resolution, 2, 300, L"300 dpi")
+	enums_add (kGraphics_resolution, 3, 360, L"360 dpi")
+	enums_add (kGraphics_resolution, 4, 600, L"600 dpi")
+enums_end (kGraphics_resolution, 4, 100)
+
+enums_begin (kGraphics_colourScale, 0)
+	enums_add (kGraphics_colourScale, 0, GREY, L"grey")
+	enums_add (kGraphics_colourScale, 1, BLUE_TO_RED, L"blue to red")
+enums_end (kGraphics_colourScale, 1, GREY)
 
 enums_begin (kGraphicsPostscript_spots, 0)
 	enums_add (kGraphicsPostscript_spots, 0, FINE, L"finest")
@@ -60,5 +66,10 @@ enums_begin (kGraphicsPostscript_fontChoiceStrategy, 0)
 	enums_add (kGraphicsPostscript_fontChoiceStrategy, 2, MONOTYPE, L"Monotype")
 	enums_add (kGraphicsPostscript_fontChoiceStrategy, 3, PS_MONOTYPE, L"PS Monotype")
 enums_end (kGraphicsPostscript_fontChoiceStrategy, 3, AUTOMATIC)
+
+enums_begin (kGraphics_cjkFontStyle, 0)
+	enums_add (kGraphics_cjkFontStyle, 0, CHINESE, L"Chinese")
+	enums_add (kGraphics_cjkFontStyle, 1, JAPANESE, L"Japanese")
+enums_end (kGraphics_cjkFontStyle, 1, CHINESE)
 
 /* End of file Graphics_enums.h */

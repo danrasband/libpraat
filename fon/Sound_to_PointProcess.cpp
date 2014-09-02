@@ -1,6 +1,6 @@
 /* Sound_to_PointProcess.cpp
  *
- * Copyright (C) 1992-2011 Paul Boersma
+ * Copyright (C) 1992-2011,2014 Paul Boersma
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,14 +50,14 @@ PointProcess Sound_to_PointProcess_extrema (Sound me, long channel, int interpol
 		 * Pass 2: compute and register the extrema.
 		 */
 		for (long i = 2; i <= my nx - 1; i ++) {
-			double time, value, i_real;
+			double time, i_real;
 			if (includeMaxima && y [i] > y [i - 1] && y [i] >= y [i + 1]) {
-				value = NUMimproveMaximum (y, my nx, i, interpolation, & i_real);
+				(void) NUMimproveMaximum (y, my nx, i, interpolation, & i_real);
 				time = my x1 + (i_real - 1.0) * my dx;
 				PointProcess_addPoint (thee.peek(), time);
 			}
 			if (includeMinima && y [i] <= y [i - 1] && y [i] < y [i + 1]) {
-				value = NUMimproveMinimum (y, my nx, i, interpolation, & i_real);
+				(void) NUMimproveMinimum (y, my nx, i, interpolation, & i_real);
 				time = my x1 + (i_real - 1.0) * my dx;
 				PointProcess_addPoint (thee.peek(), time);
 			}

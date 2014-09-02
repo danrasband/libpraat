@@ -23,9 +23,39 @@
 void manual_tutorials_init (ManPages me);
 void manual_tutorials_init (ManPages me) {
 
-MAN_BEGIN (L"What's new?", L"ppgb", 20140518)
+MAN_BEGIN (L"What's new?", L"ppgb", 20140816)
 INTRO (L"Latest changes in Praat.")
 /*LIST_ITEM (L"\\bu Manual page about @@drawing a vowel triangle@.")*/
+NORMAL (L"##5.3.83# (16 August 2014)")
+LIST_ITEM (L"\\bu TextGrid window: repaired a bug with automatic alignment that could cause an analysis tier to go out of order.")
+LIST_ITEM (L"\\bu Linux audio: created a second workaround that reduces even more the chances of a freeze that is due to a potential deadlock "
+	"in the collaboration between Alsa and PulseAudio that can occur when the playback of a sound is cancelled.")
+LIST_ITEM (L"\\bu Smoother communication with Phon.")
+LIST_ITEM (L"\\bu Windows: repaired a memory leak when saving PNG files.")
+NORMAL (L"##5.3.82# (26 July 2014)")
+LIST_ITEM (L"\\bu Audio playback: if the sound has more channels than the audio hardware, distribute them evenly.")
+LIST_ITEM (L"\\bu Pause forms: more consistent appearance of the Revert button.")
+LIST_ITEM (L"\\bu Scripting: pauseScript ( ) function.")
+NORMAL (L"##5.3.81# (2 July 2014)")
+LIST_ITEM (L"\\bu EEG: can work with status %numbers instead of only with status %bits.")
+LIST_ITEM (L"\\bu Windows: repaired a bug that could cause Praat to crash if there was a 96-dpi printer.")
+NORMAL (L"##5.3.80# (29 June 2014)")
+LIST_ITEM (L"\\bu Praat preferences: choice between Chinese and Japanese style for Han characters.")
+NORMAL (L"##5.3.79# (21 June 2014)")
+LIST_ITEM (L"\\bu Can now play sounds over more than two channels.")
+LIST_ITEM (L"\\bu Asynchronous play in scripts (see @@Demo window@).")
+LIST_ITEM (L"\\bu EEG: blue-to-red colour scale for scalp distributions.")
+NORMAL (L"##5.3.78# (12 June 2014)")
+LIST_ITEM (L"\\bu Multithreading can now speed up pitch analysis by a factor of 4 or so, "
+	"depending on the number of cores in your processor.")
+LIST_ITEM (L"\\bu Linux: can now open and save Photo objects (from PNG files) "
+	"and use @@Insert picture from file...@.")
+LIST_ITEM (L"\\bu Open WAV files that are in the \"extensible\" format (previously \"unsupported format -2\").")
+LIST_ITEM (L"\\bu Windows: support for dropping more than one file on the Praat icon.")
+LIST_ITEM (L"\\bu Scripting: can now use the #editor command with an object's ID instead of only with its name.")
+LIST_ITEM (L"\\bu Windows: removed a bug that sometimes disallowed saving more than one JPEG file.")
+LIST_ITEM (L"\\bu Linux audio: created a workaround that reduces the chances of a freeze that is due to a potential deadlock "
+	"in the collaboration between Alsa and PulseAudio that can occur when the playback of a sound is cancelled.")
 NORMAL (L"##5.3.77# (18 May 2014)")
 LIST_ITEM (L"\\bu EEG: more facilities for EDF+ files.")
 NORMAL (L"##5.3.76# (8 May 2014)")

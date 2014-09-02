@@ -3001,13 +3001,16 @@ CODE (L"time = stopwatch")
 CODE (L"writeInfoLine: a, \" \", fixed\\$  (time, 3)")
 MAN_END
 
-MAN_BEGIN (L"Scripting 6.6. Controlling the user", L"ppgb", 20140112)
+MAN_BEGIN (L"Scripting 6.6. Controlling the user", L"ppgb", 20140726)
 INTRO (L"You can temporarily halt a Praat script:")
-TAG (L"#pause %text")
+TAG (L"#pauseScript: %message")
 DEFINITION (L"suspends execution of the script, and allows the user to interrupt it. "
-	"A message window will appear with the %text and the buttons Stop and Continue:")
-CODE (L"#pause The next file will be beerbeet.TextGrid")
-NORMAL (L"In the pause window you can include the same kinds of arguments as in a @@Scripting 6.1. Arguments to the script|form@. "
+	"A message window will appear with the %message (you can use the same argument list as with #writeInfoLine) and the buttons Stop and Continue:")
+CODE (L"#pauseScript: \"The next file will be \", fileName\\$ ")
+NORMAL (L"The pauseScript function is useful if you want to send a simple message to the user, "
+	"and you only want to ask the user whether she wants to proceed or not. "
+	"More interesting interactions between your script and the user are possible with the %%pause window%. "
+	"In a pause window you can include the same kinds of arguments as in a @@Scripting 6.1. Arguments to the script|form@. "
 	"Here is an extensive example:")
 CODE (L"writeInfoLine: \"script\"")
 CODE (L"compression = 1")
@@ -3242,20 +3245,22 @@ LIST_ITEM (L"@@Scripting 7.1. Scripting an editor from a shell script@ (editor/e
 LIST_ITEM (L"@@Scripting 7.2. Scripting an editor from within@")
 MAN_END
 
-MAN_BEGIN (L"Scripting 7.1. Scripting an editor from a shell script", L"ppgb", 20140113)
+MAN_BEGIN (L"Scripting 7.1. Scripting an editor from a shell script", L"ppgb", 20140526)
 NORMAL (L"From a Praat shell script, you can switch to an editor and back again:")
 CODE (L"sound\\$  = \"hallo\"")
 CODE (L"start = 0.3")
 CODE (L"finish = 0.7")
-CODE (L"Read from file: sound\\$  + \".aifc\"")
+CODE (L"sound = Read from file: sound\\$  + \".aifc\"")
 CODE (L"View & Edit")
-CODE (L"#editor: \"Sound \" + sound\\$ ")
+CODE (L"#editor: sound")
 	CODE1 (L"Zoom: start, finish")
 CODE (L"#endeditor")
 CODE (L"Play")
 NORMAL (L"This script reads a sound file from disk, pops up an editor for the resulting object, "
 	"makes this editor zoom in on the part between 0.3 and 0.7 seconds, "
 	"and returns to the Praat shell to play the entire sound.")
+NORMAL (L"After #editor you can either give the unique id of the object, as above, or its name:")
+CODE (L"#editor: \"Sound \" + sound\\$ ")
 MAN_END
 
 MAN_BEGIN (L"Scripting 7.2. Scripting an editor from within", L"ppgb", 20140113)
@@ -3785,7 +3790,7 @@ CODE (L"endfor")
 CODE (L"selectObject: sound, textgrid")
 MAN_END
 
-MAN_BEGIN (L"Demo window", L"ppgb", 20140112)
+MAN_BEGIN (L"Demo window", L"ppgb", 20140621)
 INTRO (L"The Demo window is a window in which you can draw and ask for user input. "
 	"You can use it for demonstrations, presentations, simulations, adaptive listening experiments, "
 	"and stand-alone programs (see @@Scripting 9.1. Turning a script into a stand-alone program@).")
@@ -3920,12 +3925,33 @@ CODE (L"demo Text: 50, \"centre\", 20, \"half\", \"Analyse\"")
 CODE (L"while demoWaitForInput ( )")
 	CODE1 (L"goto ANALYSE demoClickedIn (30, 70, 16, 24)")
 ENTRY (L"Full-screen viewing")
-NORMAL (L"When you click in the \"zoom box\" (the green button in the title bar of the Demo window on the Mac), "
+NORMAL (L"When you click in the top right corner of the Demo window (64-bit Mac) "
+	"or in the \"zoom box\" (the green button in the title bar of the Demo window on 32-bit Mac), "
 	"the Demo window will zoom out very strongly: it will fill up the whole screen. The menu bar becomes invisible, "
 	"although you can still make it temporarily visible and accessible by moving the mouse to the upper edge of the screen. "
 	"The Dock also becomes invisible, although you can make it temporarily visible and accessible by moving the mouse to the edge "
 	"of the screen (the left, bottom, or right edge, depending on where your Dock normally is). "
 	"When you click the zoom box again, the Demo window is restored to its original size. See also Tips and Tricks below.")
+ENTRY (L"Asynchronous play")
+NORMAL (L"If you select a Sound and execute the command")
+CODE (L"Play")
+NORMAL (L"Praat will play the whole sound before proceeding to the next line of your script. "
+	"You will often instead want Praat to continue running your script while the sound is playing. "
+	"To accomplish that, use the \"asynchronous\" directive:")
+CODE (L"Create Sound as pure tone: \"tone\", 1, 0, 0.2, 44100, 440, 0.2, 0.01, 0.01")
+CODE (L"#asynchronous Play")
+CODE (L"Remove")
+NORMAL (L"The sound will continue to play, even after the Sound object has been removed.")
+NORMAL (L"Please note that a following Play command will interrupt the playing of the first:")
+CODE (L"while demoWaitForInput ( )")
+	CODE1 (L"if demoClicked ( )")
+		CODE2 (L"Create Sound as pure tone: \"tone\", 1, 0, 3.0, 44100,")
+		CODE2 (L"... randomGauss (440, 100), 0.2, 0.01, 0.01")
+		CODE2 (L"asynchronous Play")
+		CODE2 (L"Remove")
+	CODE1 (L"endif")
+CODE (L"endwhile")
+NORMAL (L"The first sound will stop playing soon after the user clicks for the second time.")
 ENTRY (L"Miscellaneous")
 NORMAL (L"In the above examples, things will often get drawn to the screen with some delay, "
 	"i.e., you may not see the erasures and paintings happening. This is because several operating systems "

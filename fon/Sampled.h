@@ -35,6 +35,7 @@ oo_CLASS_CREATE (Sampled, Function);
 /* The first sample point is at x1, the second at x1 + dx, */
 /* and the last at x1 + (nx - 1) * dx. */
 
+#ifdef PRAAT_LIB
 PRAAT_LIB_EXPORT double Sampled_indexToX (Sampled me, long i);
 
 PRAAT_LIB_EXPORT double Sampled_xToIndex (Sampled me, double x);
@@ -44,6 +45,14 @@ PRAAT_LIB_EXPORT long Sampled_xToLowIndex (Sampled me, double x);
 PRAAT_LIB_EXPORT long Sampled_xToHighIndex (Sampled me, double x);
 
 PRAAT_LIB_EXPORT long Sampled_xToNearestIndex (Sampled me, double x);
+#else
+static inline double Sampled_indexToX (Sampled me, long   index) { return my x1 + (index - 1  ) * my dx; }
+static inline double Sampled_indexToX (Sampled me, double index) { return my x1 + (index - 1.0) * my dx; }
+static inline double Sampled_xToIndex (Sampled me, double x) { return (x - my x1) / my dx + 1.0; }
+static inline long Sampled_xToLowIndex     (Sampled me, double x) { return (long) floor ((x - my x1) / my dx + 1.0); }
+static inline long Sampled_xToHighIndex    (Sampled me, double x) { return (long) ceil  ((x - my x1) / my dx + 1.0); }
+static inline long Sampled_xToNearestIndex (Sampled me, double x) { return (long) round ((x - my x1) / my dx + 1.0); }
+#endif
 
 PRAAT_LIB_EXPORT long Sampled_getWindowSamples (Sampled me, double xmin, double xmax, long *ixmin, long *ixmax);
 

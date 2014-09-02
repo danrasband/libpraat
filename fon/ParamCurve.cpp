@@ -1,6 +1,6 @@
 /* ParamCurve.cpp
  *
- * Copyright (C) 1992-2012 Paul Boersma
+ * Copyright (C) 1992-2012,2014 Paul Boersma
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ void structParamCurve :: v_readBinary (FILE *f) {
 	Data_readBinary (y, f);
 	Thing_version = saveVersion;
 	xmin = x -> xmin > y -> xmin ? x -> xmin : y -> xmin;
-	xmax = x -> xmax < y -> xmax ? x -> xmax : y -> xmax; 
+	xmax = x -> xmax < y -> xmax ? x -> xmax : y -> xmax;
 }
 
 void ParamCurve_init (ParamCurve me, Sound x, Sound y) {
@@ -101,7 +101,7 @@ void ParamCurve_init (ParamCurve me, Sound x, Sound y) {
 	my x = Data_copy (x);
 	my y = Data_copy (y);
 	my xmin = x -> xmin > y -> xmin ? x -> xmin : y -> xmin;
-	my xmax = x -> xmax < y -> xmax ? x -> xmax : y -> xmax; 
+	my xmax = x -> xmax < y -> xmax ? x -> xmax : y -> xmax;
 }
 
 ParamCurve ParamCurve_create (Sound x, Sound y) {

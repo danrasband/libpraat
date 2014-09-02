@@ -1,6 +1,6 @@
 /* RealTierEditor.cpp
  *
- * Copyright (C) 1992-2011,2012,2013 Paul Boersma
+ * Copyright (C) 1992-2011,2012,2013,2014 Paul Boersma
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -323,11 +323,11 @@ int structRealTierEditor :: v_click (double xWC, double yWC, bool shiftKeyPresse
 	{
 		RealPoint *points = (RealPoint *) pitch -> points -> item;
 		double newTime = points [ifirstSelected] -> number + dt;
-		if (newTime < d_tmin) return 1;   // outside domain
+		if (newTime < our tmin) return 1;   // outside domain
 		if (ifirstSelected > 1 && newTime <= points [ifirstSelected - 1] -> number)
 			return 1;   // past left neighbour
 		newTime = points [ilastSelected] -> number + dt;
-		if (newTime > d_tmax) return 1;   // outside domain
+		if (newTime > our tmax) return 1;   // outside domain
 		if (ilastSelected < pitch -> points -> size && newTime >= points [ilastSelected + 1] -> number)
 			return 1;   // past right neighbour
 	}
@@ -382,7 +382,7 @@ void structRealTierEditor :: v_play (double a_tmin, double a_tmax) {
 void RealTierEditor_init (RealTierEditor me, const wchar_t *title, RealTier data, Sound sound, bool ownSound) {
 	Melder_assert (data != NULL);
 	Melder_assert (Thing_member (data, classRealTier));
-	my structTimeSoundEditor :: f_init (title, data, sound, ownSound);
+	TimeSoundEditor_init (me, title, data, sound, ownSound);
 	my ymin = -1.0;
 	RealTierEditor_updateScaling (me);
 	my ycursor = 0.382 * my ymin + 0.618 * my ymax;

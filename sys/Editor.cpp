@@ -22,6 +22,7 @@
 #include "machine.h"
 #include "EditorM.h"
 #include "praat_script.h"
+#include "sendsocket.h"
 
 #include "enums_getText.h"
 #include "Editor_enums.h"
@@ -42,9 +43,9 @@ Thing_implement (Editor, Thing, 0);
 Thing_implement (EditorCommand, Thing, 0);
 
 void structEditorCommand :: v_destroy () {
-	Melder_free (itemTitle);
-	Melder_free (script);
-	forget (d_uiform);
+	Melder_free (our itemTitle);
+	Melder_free (our script);
+	forget (our d_uiform);
 	EditorCommand_Parent :: v_destroy ();
 }
 
@@ -53,8 +54,8 @@ void structEditorCommand :: v_destroy () {
 Thing_implement (EditorMenu, Thing, 0);
 
 void structEditorMenu :: v_destroy () {
-	Melder_free (menuTitle);
-	forget (commands);
+	Melder_free (our menuTitle);
+	forget (our commands);
 	EditorMenu_Parent :: v_destroy ();
 }
 
@@ -219,56 +220,69 @@ void structEditor :: v_destroy () {
 	 * The following command must be performed before the shell is destroyed.
 	 * Otherwise, we would be forgetting dangling command dialogs here.
 	 */
-	forget (menus);
+	forget (our menus);
 	broadcastDestruction ();
-	if (d_windowForm) {
+	if (our d_windowForm) {
 		#if gtk
-			if (d_windowForm -> d_gtkWindow) {
-				Melder_assert (GTK_IS_WIDGET (d_windowForm -> d_gtkWindow));
-				gtk_widget_destroy (GTK_WIDGET (d_windowForm -> d_gtkWindow));
+			if (our d_windowForm -> d_gtkWindow) {
+				Melder_assert (GTK_IS_WIDGET (our d_windowForm -> d_gtkWindow));
+				gtk_widget_destroy (GTK_WIDGET (our d_windowForm -> d_gtkWindow));
 			}
 		#elif cocoa
-			if (d_windowForm -> d_cocoaWindow) {
-				NSWindow *cocoaWindow = d_windowForm -> d_cocoaWindow;
+			if (our d_windowForm -> d_cocoaWindow) {
+				NSWindow *cocoaWindow = our d_windowForm -> d_cocoaWindow;
 				//d_windowForm -> d_cocoaWindow = NULL;
 				[cocoaWindow close];
 			}
 		#elif motif
-			if (d_windowForm -> d_xmShell) {
-				XtDestroyWidget (d_windowForm -> d_xmShell);
+			if (our d_windowForm -> d_xmShell) {
+				XtDestroyWidget (our d_windowForm -> d_xmShell);
 			}
 		#endif
 	}
-	forget (previousData);
-	if (d_ownData) forget (data);
+	forget (our previousData);
+	if (our d_ownData) forget (our data);
+	Melder_free (our callbackSocket);
 	Editor_Parent :: v_destroy ();
 }
 
 void structEditor :: v_info () {
 	MelderInfo_writeLine (L"Editor type: ", Thing_className (this));
-	MelderInfo_writeLine (L"Editor name: ", name ? name : L"<no name>");
+	MelderInfo_writeLine (L"Editor name: ", our name ? our name : L"<no name>");
 	time_t today = time (NULL);
 	MelderInfo_writeLine (L"Date: ", Melder_peekUtf8ToWcs (ctime (& today)));   // includes a newline
-	if (data) {
-		MelderInfo_writeLine (L"Data type: ", data -> classInfo -> className);
-		MelderInfo_writeLine (L"Data name: ", data -> name);
+	if (our data) {
+		MelderInfo_writeLine (L"Data type: ", our data -> classInfo -> className);
+		MelderInfo_writeLine (L"Data name: ", our data -> name);
 	}
 }
 
 void structEditor :: v_nameChanged () {
-	if (name)
-		d_windowForm -> f_setTitle (name);
+	if (our name)
+		our d_windowForm -> f_setTitle (our name);
 }
 
 void structEditor :: v_saveData () {
-	if (! data) return;
-	forget (previousData);
-	previousData = Data_copy (data);
+	if (! our data) return;
+	forget (our previousData);
+	our previousData = Data_copy (our data);
 }
 
 void structEditor :: v_restoreData () {
-	if (data && previousData)
-		Thing_swap (data, previousData);
+	if (our data && our previousData)
+		Thing_swap (our data, our previousData);
+}
+
+static void menu_cb_sendBackToCallingProgram (EDITOR_ARGS) {
+	EDITOR_IAM (Editor);
+	if (my data) {
+		extern structMelderDir praatDir;
+		structMelderFile file;
+		MelderDir_getFile (& praatDir, L"praat_backToCaller.Data", & file);
+		Data_writeToBinaryFile (my data, & file);
+		sendsocket (my callbackSocket, Melder_peekWcsToUtf8 (my data -> name));
+	}
+	my v_goAway ();
 }
 
 static void menu_cb_close (EDITOR_ARGS) {
@@ -321,8 +335,8 @@ void structEditor :: v_createMenuItems_file (EditorMenu menu) {
 }
 
 void structEditor :: v_createMenuItems_edit (EditorMenu menu) {
-	if (data)
-		undoButton = EditorMenu_addCommand (menu, L"Cannot undo", GuiMenu_INSENSITIVE + 'Z', menu_cb_undo);
+	if (our data)
+		our undoButton = EditorMenu_addCommand (menu, L"Cannot undo", GuiMenu_INSENSITIVE + 'Z', menu_cb_undo);
 }
 
 static void menu_cb_settingsReport (EDITOR_ARGS) {
@@ -490,6 +504,8 @@ void Editor_init (Editor me, int x, int y, int width, int height, const wchar_t 
 		 * Add the scripted commands.
 		 */
 		praat_addCommandsToEditor (me);
+		if (my callbackSocket)
+			Editor_addCommand (me, L"File", L"Send back to calling program", 0, menu_cb_sendBackToCallingProgram);
 		Editor_addCommand (me, L"File", L"Close", 'W', menu_cb_close);
 	}
 	my d_windowForm -> f_show ();

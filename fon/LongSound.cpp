@@ -1,6 +1,6 @@
 /* LongSound.cpp
  *
- * Copyright (C) 1992-2012 Paul Boersma, 2007 Erez Volk (for FLAC and MP3)
+ * Copyright (C) 1992-2012,2014 Paul Boersma, 2007 Erez Volk (for FLAC and MP3)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@
  * pb 2010/12/20 support for more than 2 channels
  * pb 2011/06/02 C++
  * pb 2011/07/05 C++
+ * pb 2014/06/16 more support for more than 2 channels
  */
 
 #include "LongSound.h"
@@ -535,8 +536,8 @@ void LongSound_playPart (LongSound me, double tmin, double tmax,
 	int (*callback) (void *closure, int phase, double tmin, double tmax, double t), void *closure)
 {
 	struct LongSoundPlay *thee = (struct LongSoundPlay *) & thePlayingLongSound;
-	Melder_free (thy resampledBuffer);   // just in case
 	MelderAudio_stopPlaying (MelderAudio_IMPLICIT);
+	Melder_free (thy resampledBuffer);   // just in case, and after playing has stopped
 	try {
 		int fits = LongSound_haveWindow (me, tmin, tmax);
 		long bestSampleRate = MelderAudio_getOutputBestSampleRate (my sampleRate), n, i1, i2;
@@ -559,7 +560,7 @@ void LongSound_playPart (LongSound me, double tmin, double tmax,
 			thy silenceBefore = (long) (my sampleRate * MelderAudio_getOutputSilenceBefore ());
 			thy silenceAfter = (long) (my sampleRate * MelderAudio_getOutputSilenceAfter ());
 			if (thy callback) thy callback (thy closure, 1, tmin, tmax, tmin);
-			if (thy silenceBefore > 0 || thy silenceAfter > 0) {
+			if (thy silenceBefore > 0 || thy silenceAfter > 0 || 1) {
 				thy resampledBuffer = Melder_calloc (short, (thy silenceBefore + thy numberOfSamples + thy silenceAfter) * my numberOfChannels);
 				memcpy (& thy resampledBuffer [thy silenceBefore * my numberOfChannels], & my buffer [(i1 - my imin) * my numberOfChannels],
 					thy numberOfSamples * sizeof (short) * my numberOfChannels);
@@ -593,14 +594,26 @@ void LongSound_playPart (LongSound me, double tmin, double tmax,
 					double fraction = index - flore;
 					resampledBuffer [i + silenceBefore] = (1 - fraction) * from [flore] + fraction * from [flore + 1];
 				}
+			} else if (my numberOfChannels == 2) {
+				for (i = 0; i < newN; i ++) {
+					double t = t1 + i * dt;
+					double index = (t - t1) * newSampleRate;
+					long flore = index;
+					double fraction = index - flore;
+					long ii = i + silenceBefore;
+					resampledBuffer [ii + ii] = (1 - fraction) * from [flore + flore] + fraction * from [flore + flore + 2];
+					resampledBuffer [ii + ii + 1] = (1 - fraction) * from [flore + flore + 1] + fraction * from [flore + flore + 3];
+				}
 			} else {
 				for (i = 0; i < newN; i ++) {
 					double t = t1 + i * dt;
 					double index = (t - t1) * newSampleRate;
-					long flore = index, ii = i + silenceBefore;
+					long flore = index;
 					double fraction = index - flore;
-					resampledBuffer [ii + ii] = (1 - fraction) * from [flore + flore] + fraction * from [flore + flore + 2];
-					resampledBuffer [ii + ii + 1] = (1 - fraction) * from [flore + flore + 1] + fraction * from [flore + flore + 3];
+					long ii = (i + silenceBefore) * my numberOfChannels;
+					for (long chan = 0; chan < my numberOfChannels; chan ++) {
+						resampledBuffer [ii + chan] = (1 - fraction) * from [flore + flore + chan] + fraction * from [flore + flore + chan + my numberOfChannels];
+					}
 				}
 			}
 			if (thy callback) thy callback (thy closure, 1, tmin, tmax, tmin);
@@ -641,7 +654,7 @@ void LongSound_concatenate (Collection me, MelderFile file, int audioFileType, i
 			data = (Sampled) my item [i];
 			if (data -> classInfo == classSound) {
 				Sound sound = (Sound) data;
-				sampleRatesMatch = floor (1.0 / sound -> dx + 0.5) == sampleRate;
+				sampleRatesMatch = round (1.0 / sound -> dx) == sampleRate;
 				numbersOfChannelsMatch = sound -> ny == numberOfChannels;
 				n += sound -> nx;
 			} else {

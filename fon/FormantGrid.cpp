@@ -76,8 +76,7 @@ void structFormantGrid :: v_scaleX (double xminfrom, double xmaxfrom, double xmi
 	}
 }
 
-void FormantGrid_init (I, double tmin, double tmax, long numberOfFormants) {
-	iam (FormantGrid);
+void FormantGrid_init (FormantGrid me, double tmin, double tmax, long numberOfFormants) {
 	my formants = Ordered_create ();
 	my bandwidths = Ordered_create ();
 	for (long iformant = 1; iformant <= numberOfFormants; iformant ++) {
