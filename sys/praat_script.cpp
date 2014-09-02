@@ -86,6 +86,19 @@ Editor praat_findEditorFromString (const wchar_t *string) {
 	Melder_throw ("Editor \"", string, "\" does not exist.");
 }
 
+Editor praat_findEditorById (long id) {
+	int IOBJECT;
+	WHERE (1) {
+		if (ID == id) {
+			for (int ieditor = 0; ieditor < praat_MAXNUM_EDITORS; ieditor ++) {
+				Editor editor = (Editor) theCurrentPraatObjects -> list [IOBJECT]. editors [ieditor];
+				if (editor) return editor;
+			}
+		}
+	}
+	Melder_throw ("Editor ", id, " does not exist.");
+}
+
 static int parseCommaSeparatedArguments (Interpreter interpreter, wchar_t *arguments, structStackel args []) {
 	int narg = 0, depth = 0;
 	for (wchar_t *p = arguments; ; p ++) {
@@ -238,6 +251,9 @@ int praat_executeCommand (Interpreter interpreter, wchar_t *command) {
 		} else if (wcsnequ (command, L"demo ", 5)) {
 			autoDemoOpen demo;
 			praat_executeCommand (interpreter, command + 5);
+		} else if (wcsnequ (command, L"asynchronous ", 13)) {
+			autoMelderAsynchronous asynchronous;
+			praat_executeCommand (interpreter, command + 13);
 		} else if (wcsnequ (command, L"pause ", 6) || wcsequ (command, L"pause")) {
 			if (theCurrentPraatApplication -> batch)
 				return 1;   // in batch we ignore pause statements

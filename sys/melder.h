@@ -34,20 +34,14 @@
 #include <stddef.h>
 #include <wchar.h>
 #ifdef __MINGW32__
+	#undef swprintf
 	#define swprintf  _snwprintf
+	//#define swprintf  __mingw_snwprintf
 #endif
 #include <stdbool.h>
 #include <stdint.h>
 
 typedef wchar_t wchar;
-typedef int8_t int8;
-typedef uint8_t uint8;
-typedef int16_t int16;
-typedef uint16_t uint16;
-typedef int32_t int32;
-typedef uint32_t uint32;
-typedef int64_t int64;
-typedef uint64_t uint64;
 
 bool Melder_wcsequ_firstCharacterCaseInsensitive (const wchar_t *string1, const wchar_t *string2);
 
@@ -75,7 +69,7 @@ typedef struct { double red, green, blue, transparency; } double_rgbt;
 
 /********** NUMBER TO STRING CONVERSION **********/
 
-/*
+/**
 	The following routines return a static string, chosen from a circularly used set of 11 buffers.
 	You can call at most 11 of them in one Melder_casual call, for instance.
 */
@@ -116,6 +110,7 @@ void Melder_writeToConsole (const wchar_t *message, bool useStderr);
 /* These routines also maintain a count of the total number of blocks allocated. */
 
 void Melder_alloc_init (void);   // to be called around program start-up
+void Melder_message_init (void);   // to be called around program start-up
 void * _Melder_malloc (unsigned long size);
 #define Melder_malloc(type,numberOfElements)  (type *) _Melder_malloc ((numberOfElements) * sizeof (type))
 void * _Melder_malloc_f (unsigned long size);
@@ -141,7 +136,7 @@ wchar_t * Melder_wcsExpandBackslashSequences (const wchar_t *string);
 wchar_t * Melder_wcsReduceBackslashSequences (const wchar_t *string);
 void Melder_wcsReduceBackslashSequences_inline (const wchar_t *string);
 
-/*
+/**
  * Text encodings.
  */
 void Melder_textEncoding_prefs (void);
@@ -155,13 +150,13 @@ enum kMelder_textOutputEncoding Melder_getOutputEncoding (void);
  * these constants should stay separate from the above encoding constants
  * because they occur in the same fields of struct MelderFile.
  */
-#define kMelder_textInputEncoding_FLAC  0x464C4143
-#define kMelder_textOutputEncoding_ASCII  0x41534349
-#define kMelder_textOutputEncoding_ISO_LATIN1  0x4C415401
-#define kMelder_textOutputEncoding_FLAC  0x464C4143
+const uint32_t kMelder_textInputEncoding_FLAC = 0x464C4143;
+const uint32_t kMelder_textOutputEncoding_ASCII = 0x41534349;
+const uint32_t kMelder_textOutputEncoding_ISO_LATIN1 = 0x4C415401;
+const uint32_t kMelder_textOutputEncoding_FLAC = 0x464C4143;
 
-typedef uint16 MelderUtf16;
-typedef uint32 MelderUtf32;
+typedef uint16_t MelderUtf16;
+typedef uint32_t MelderUtf32;
 
 bool Melder_isValidAscii (const wchar_t *string);
 bool Melder_strIsValidUtf8 (const char *string);
@@ -522,7 +517,7 @@ void Melder_beep (void);
 extern int Melder_debug;
 
 /* The following trick uses Melder_debug only because it is the only plain variable known to exist at the moment. */
-#define Melder_offsetof(klas,member) (char *) & ((klas) & Melder_debug) -> member - (char *) & Melder_debug
+#define Melder_offsetof(klas,member) (int) ((char *) & ((klas) & Melder_debug) -> member - (char *) & Melder_debug)
 
 /********** ERROR **********/
 
@@ -818,7 +813,7 @@ int Melder_publishPlayed (void);
 
 extern unsigned long Melder_systemVersion;
 /*
-	For Macintosh, this is set in the Motif emulator.
+	For Macintosh, this is set in praat_init.
 */
 
 /********** SCRATCH TEXT BUFFERS **********/
@@ -850,6 +845,7 @@ void MelderGui_create (/* GuiWindow */ void *parent);
 extern bool Melder_batch;   // true if run from the batch or from an interactive command-line interface
 extern bool Melder_backgrounding;   /* True if running a script. */
 extern bool Melder_consoleIsAnsi;
+extern bool Melder_asynchronous;   // true if specified by the "asynchronous" directive in a script
 #ifndef CONTROL_APPLICATION
 	typedef struct structGuiWindow *GuiWindow;
 	extern GuiWindow Melder_topShell;
@@ -930,7 +926,7 @@ enum kMelder_asynchronicityLevel MelderAudio_getOutputMaximumAsynchronicity (voi
 long MelderAudio_getOutputBestSampleRate (long fsamp);
 
 extern bool MelderAudio_isPlaying;
-void MelderAudio_play16 (const int16_t *buffer, long sampleRate, long numberOfSamples, int numberOfChannels,
+void MelderAudio_play16 (int16_t *buffer, long sampleRate, long numberOfSamples, int numberOfChannels,
 	bool (*playCallback) (void *playClosure, long numberOfSamplesPlayed),   // return true to continue, false to stop
 	void *playClosure);
 bool MelderAudio_stopPlaying (bool isExplicit);   // returns true if sound was playing
@@ -1224,6 +1220,11 @@ public:
 		MelderAudio_setOutputMaximumAsynchronicity (d_saveAsynchronicity);
 		trace ("value set to %d", (int) d_saveAsynchronicity);
 	}
+};
+
+struct autoMelderAsynchronous {
+	autoMelderAsynchronous () { Melder_asynchronous = true; }
+	~autoMelderAsynchronous () { Melder_asynchronous = false; }
 };
 
 /* End of file melder.h */

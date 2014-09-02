@@ -42,13 +42,6 @@
  * pb 2011/04/05 C++
  */
 
-#include "melder.h"
-#include "Gui.h"
-#include "Preferences.h"
-#include "NUM.h"
-#include <time.h>
-#define my  me ->
-
 #if defined (macintosh)
 	#include <sys/time.h>
 	#include <math.h>
@@ -70,6 +63,13 @@
 	#endif
 	#include <errno.h>
 #endif
+
+#include "melder.h"
+#include "Gui.h"
+#include "Preferences.h"
+#include "NUM.h"
+#include <time.h>
+#define my  me ->
 
 #include "../external/portaudio/portaudio.h"
 
@@ -141,11 +141,12 @@ bool MelderAudio_isPlaying;
 static double theStartingTime = 0.0;
 
 static struct MelderPlay {
-	const int16_t *buffer;
+	int16_t *buffer;
 	long sampleRate, numberOfSamples, samplesLeft, samplesSent, samplesPlayed;
 	unsigned int asynchronicity;
 	int numberOfChannels;
 	bool explicitStop, fakeMono;
+	volatile int volatile_interrupted;
 	bool (*callback) (void *closure, long samplesPlayed);
 	void *closure;
 	#if cocoa
@@ -186,7 +187,99 @@ bool MelderAudio_stopWasExplicit (void) {
 static bool flush (void) {
 	struct MelderPlay *me = & thePlay;
 	if (my usePortAudio) {
-		if (my stream != NULL) Pa_CloseStream (my stream), my stream = NULL;
+		if (my stream != NULL) {
+			#ifdef linux
+
+				Pa_Sleep (200);   // this reduces the chance of seeing the Alsa/PulseAudio deadlock:
+				/*
+					(gdb) thread apply all bt
+
+					Thread 13 (Thread 0x7fffde1d2700 (LWP 25620)):
+					#0  0x00007ffff65a3d67 in pthread_cond_wait@@GLIBC_2.3.2 ()
+					   from /lib/x86_64-linux-gnu/libpthread.so.0
+					#1  0x00007fffec0b3980 in pa_threaded_mainloop_wait () from /usr/lib/x86_64-linux-gnu/libpulse.so.0
+					#2  0x00007fffde407054 in pulse_wait_operation ()
+					   from /usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_pulse.so
+					#3  0x00007fffde405c10 in ?? ()
+					   from /usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_pulse.so
+					#4  0x00007ffff6843708 in alsa_snd_pcm_drop () from /usr/lib/x86_64-linux-gnu/libasound.so.2
+					#5  0x0000000000812de0 in AlsaStop ()
+					#6  0x00000000008183e1 in OnExit ()
+					#7  0x0000000000818483 in CallbackThreadFunc ()
+					#8  0x00007ffff659fe9a in start_thread () from /lib/x86_64-linux-gnu/libpthread.so.0
+					#9  0x00007ffff5aba3fd in clone () from /lib/x86_64-linux-gnu/libc.so.6
+					#10 0x0000000000000000 in ?? ()
+
+					Thread 12 (Thread 0x7fffdffff700 (LWP 25619)):
+					#0  0x00007ffff659d9b0 in __pthread_mutex_lock_full () from /lib/x86_64-linux-gnu/libpthread.so.0
+					#1  0x00007fffdf3d7e1e in pa_mutex_lock () from /usr/lib/x86_64-linux-gnu/libpulsecommon-1.1.so
+					#2  0x00007fffec0b3369 in ?? () from /usr/lib/x86_64-linux-gnu/libpulse.so.0
+					#3  0x00007fffec0a476c in pa_mainloop_poll () from /usr/lib/x86_64-linux-gnu/libpulse.so.0
+					#4  0x00007fffec0a4dd9 in pa_mainloop_iterate () from /usr/lib/x86_64-linux-gnu/libpulse.so.0
+					#5  0x00007fffec0a4e90 in pa_mainloop_run () from /usr/lib/x86_64-linux-gnu/libpulse.so.0
+					#6  0x00007fffec0b330f in ?? () from /usr/lib/x86_64-linux-gnu/libpulse.so.0
+					#7  0x00007fffdf3d8d18 in ?? () from /usr/lib/x86_64-linux-gnu/libpulsecommon-1.1.so
+					#8  0x00007ffff659fe9a in start_thread () from /lib/x86_64-linux-gnu/libpthread.so.0
+					#9  0x00007ffff5aba3fd in clone () from /lib/x86_64-linux-gnu/libc.so.6
+					#10 0x0000000000000000 in ?? ()
+
+					Thread 3 (Thread 0x7fffefd8b700 (LWP 25610)):
+					#0  0x00007ffff5aaea43 in poll () from /lib/x86_64-linux-gnu/libc.so.6
+					#1  0x00007ffff6ae9ff6 in ?? () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+					#2  0x00007ffff6aea45a in g_main_loop_run () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+					#3  0x00007ffff4bb75e6 in ?? () from /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0
+					#4  0x00007ffff6b0b9b5 in ?? () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+					#5  0x00007ffff659fe9a in start_thread () from /lib/x86_64-linux-gnu/libpthread.so.0
+					---Type <return> to continue, or q <return> to quit---
+					#6  0x00007ffff5aba3fd in clone () from /lib/x86_64-linux-gnu/libc.so.6
+					#7  0x0000000000000000 in ?? ()
+
+					Thread 2 (Thread 0x7ffff058c700 (LWP 25609)):
+					#0  0x00007ffff5aaea43 in poll () from /lib/x86_64-linux-gnu/libc.so.6
+					#1  0x00007ffff6ae9ff6 in ?? () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+					#2  0x00007ffff6aea45a in g_main_loop_run () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+					#3  0x00007ffff059698b in ?? () from /usr/lib/x86_64-linux-gnu/gio/modules/libdconfsettings.so
+					#4  0x00007ffff6b0b9b5 in ?? () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+					#5  0x00007ffff659fe9a in start_thread () from /lib/x86_64-linux-gnu/libpthread.so.0
+					#6  0x00007ffff5aba3fd in clone () from /lib/x86_64-linux-gnu/libc.so.6
+					#7  0x0000000000000000 in ?? ()
+
+					Thread 1 (Thread 0x7ffff7fce940 (LWP 25608)):
+					#0  0x00007ffff65a1148 in pthread_join () from /lib/x86_64-linux-gnu/libpthread.so.0
+					#1  0x000000000081073e in PaUnixThread_Terminate ()
+					#2  0x0000000000818239 in RealStop ()
+					#3  0x00000000008182c7 in AbortStream ()
+					#4  0x0000000000811ce5 in Pa_CloseStream ()
+					#5  0x0000000000753a6d in flush ()
+					#6  0x0000000000753dae in MelderAudio_stopPlaying ()
+					#7  0x00000000004d80e1 in Sound_playPart ()
+					#8  0x00000000004f7b48 in structSoundEditor::v_play ()
+					#9  0x00000000004e7197 in gui_drawingarea_cb_click ()
+					#10 0x00000000007d0d35 in _GuiGtkDrawingArea_clickCallback ()
+					#11 0x00007ffff78d6e78 in ?? () from /usr/lib/x86_64-linux-gnu/libgtk-x11-2.0.so.0
+					#12 0x00007ffff6da6ca2 in g_closure_invoke () from /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0
+					#13 0x00007ffff6db7d71 in ?? () from /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0
+					#14 0x00007ffff6dbfd4e in g_signal_emit_valist ()
+					   from /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0
+					#15 0x00007ffff6dc0212 in g_signal_emit () from /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0
+					#16 0x00007ffff79f1231 in ?? () from /usr/lib/x86_64-linux-gnu/libgtk-x11-2.0.so.0
+					#17 0x00007ffff78d5003 in gtk_propagate_event () from /usr/lib/x86_64-linux-gnu/libgtk-x11-2.0.so.0
+					#18 0x00007ffff78d5363 in gtk_main_do_event () from /usr/lib/x86_64-linux-gnu/libgtk-x11-2.0.so.0
+					#19 0x00007ffff7549cac in ?? () from /usr/lib/x86_64-linux-gnu/libgdk-x11-2.0.so.0
+					#20 0x00007ffff6ae9d13 in g_main_context_dispatch () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+					#21 0x00007ffff6aea060 in ?? () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+					---Type <return> to continue, or q <return> to quit---
+					#22 0x00007ffff6aea45a in g_main_loop_run () from /lib/x86_64-linux-gnu/libglib-2.0.so.0
+					#23 0x00007ffff78d4397 in gtk_main () from /usr/lib/x86_64-linux-gnu/libgtk-x11-2.0.so.0
+					#24 0x00000000007909eb in praat_run ()
+					#25 0x000000000040e009 in main ()
+
+					Also see http://sourceforge.net/p/audacity/mailman/audacity-devel/thread/200912181409.49839.businessmanprogrammersteve@gmail.com/
+				*/
+			#endif
+			Pa_CloseStream (my stream);
+			my stream = NULL;
+		}
 	} else {
 	#if defined (macintosh)
 	#elif defined (linux)
@@ -239,7 +332,6 @@ bool MelderAudio_stopPlaying (bool explicitStop) {
 	struct MelderPlay *me = & thePlay;
 	my explicitStop = explicitStop;
 	if (! MelderAudio_isPlaying || my asynchronicity < kMelder_asynchronicityLevel_ASYNCHRONOUS) return false;
-	(void) flush ();
 	#if cocoa
 		CFRunLoopRemoveTimer (CFRunLoopGetCurrent (), thePlay. cocoaTimer, kCFRunLoopCommonModes);
 	#elif motif
@@ -247,6 +339,7 @@ bool MelderAudio_stopPlaying (bool explicitStop) {
 	#elif gtk
 		g_source_remove (thePlay. workProcId_gtk);
 	#endif
+	(void) flush ();
 	return true;
 }
 
@@ -256,36 +349,52 @@ static bool workProc (void *closure) {
 //n ++;
 //Melder_casual("workProc %ld", n);
 	if (my usePortAudio) {
-		/*
-		 * Not all hostApis support paComplete or wait till all buffers have been played in Pa_StopStream.
-		 * Once pa_win_ds implements this, we can simply do:
-		 * if (Pa_IsStreamActive (my stream)) {
-		 *    if (my callback && ! my callback (my closure, my samplesPlayed))
-		 *       return flush ();
-		 * } else {
-		 *    my samplesPlayed = my numberOfSamples;
-		 *    return flush ();
-		 * }
-		 * But then we also have to use paComplete in the stream callback.
-		 */
-		double timeElapsed = Melder_clock () - theStartingTime - Pa_GetStreamInfo (my stream) -> outputLatency;
-		my samplesPlayed = timeElapsed * my sampleRate;
-		if (my supports_paComplete && Pa_IsStreamActive (my stream)) {
-			if (my callback && ! my callback (my closure, my samplesPlayed)) {
-				Pa_AbortStream (my stream);
+		#if defined (linux)
+			double timeElapsed = Melder_clock () - theStartingTime - Pa_GetStreamInfo (my stream) -> outputLatency;
+			long samplesPlayed = timeElapsed * my sampleRate;
+			if (my callback && ! my callback (my closure, samplesPlayed)) {
+				my volatile_interrupted = 1;
 				return flush ();
 			}
-		} else if (my samplesPlayed < my numberOfSamples + my sampleRate / 20) {   // allow the latency estimate to be 50 ms off.
-			if (my callback && ! my callback (my closure, my samplesPlayed)) {
-				Pa_AbortStream (my stream);
+			if (my samplesLeft == 0) {
 				return flush ();
 			}
-		} else {
-			Pa_AbortStream (my stream);
-			my samplesPlayed = my numberOfSamples;
-			return flush ();
-		}
-		Pa_Sleep (10);
+		#elif defined (linuxXXX)
+			/*
+			 * Not all hostApis support paComplete or wait till all buffers have been played in Pa_StopStream.
+			 * Once pa_win_ds implements this, we can simply do:
+			 */
+			if (Pa_IsStreamActive (my stream)) {
+				if (my callback && ! my callback (my closure, my samplesPlayed))
+					return flush ();
+			} else {
+				Pa_StopStream (my stream);
+				my samplesPlayed = my numberOfSamples;
+				return flush ();
+			}
+			/*
+			 * But then we also have to use paComplete in the stream callback.
+			 */
+		#else
+			double timeElapsed = Melder_clock () - theStartingTime - Pa_GetStreamInfo (my stream) -> outputLatency;
+			my samplesPlayed = timeElapsed * my sampleRate;
+			if (my supports_paComplete && Pa_IsStreamActive (my stream)) {
+				if (my callback && ! my callback (my closure, my samplesPlayed)) {
+					Pa_AbortStream (my stream);
+					return flush ();
+				}
+			} else if (my samplesPlayed < my numberOfSamples + my sampleRate / 20) {   // allow the latency estimate to be 50 ms off.
+				if (my callback && ! my callback (my closure, my samplesPlayed)) {
+					Pa_AbortStream (my stream);
+					return flush ();
+				}
+			} else {
+				Pa_AbortStream (my stream);
+				my samplesPlayed = my numberOfSamples;
+				return flush ();
+			}
+			Pa_Sleep (10);
+		#endif
 	} else {
 	#if defined (macintosh)
 	#elif defined (linux)
@@ -362,6 +471,11 @@ static int thePaStreamCallback (const void *input, void *output,
 	(void) timeInfo;
 	(void) userData;
 	struct MelderPlay *me = & thePlay;
+	if (my volatile_interrupted) {
+		memset (output, '\0', 2 * frameCount * my numberOfChannels);
+		my samplesPlayed = my numberOfSamples;
+		return my supports_paComplete ? paComplete : paContinue;
+	}
 	if (statusFlags & paOutputUnderflow) {
 		if (Melder_debug == 20) Melder_casual ("output underflow");
 	}
@@ -373,6 +487,7 @@ static int thePaStreamCallback (const void *input, void *output,
 		if (Melder_debug == 20) Melder_casual ("play %ls %ls", Melder_integer (dsamples),
 			Melder_double (Pa_GetStreamCpuLoad (my stream)));
 		memset (output, '\0', 2 * frameCount * my numberOfChannels);
+		Melder_assert (my buffer != NULL);
 		memcpy (output, (char *) & my buffer [my samplesSent * my numberOfChannels], 2 * dsamples * my numberOfChannels);
 		my samplesLeft -= dsamples;
 		my samplesSent += dsamples;
@@ -380,12 +495,13 @@ static int thePaStreamCallback (const void *input, void *output,
 	} else /*if (my samplesPlayed >= my numberOfSamples)*/ {
 		memset (output, '\0', 2 * frameCount * my numberOfChannels);
 		my samplesPlayed = my numberOfSamples;
+		trace ("paComplete");
 		return my supports_paComplete ? paComplete : paContinue;
 	}
 	return paContinue;
 }
 
-void MelderAudio_play16 (const int16_t *buffer, long sampleRate, long numberOfSamples, int numberOfChannels,
+void MelderAudio_play16 (int16_t *buffer, long sampleRate, long numberOfSamples, int numberOfChannels,
 	bool (*playCallback) (void *playClosure, long numberOfSamplesPlayed), void *playClosure)
 {
 	struct MelderPlay *me = & thePlay;
@@ -401,7 +517,7 @@ void MelderAudio_play16 (const int16_t *buffer, long sampleRate, long numberOfSa
 	my closure = playClosure;
 	my asynchronicity =
 		Melder_batch ? kMelder_asynchronicityLevel_SYNCHRONOUS :
-		Melder_backgrounding ? kMelder_asynchronicityLevel_INTERRUPTABLE :
+		(Melder_backgrounding && ! Melder_asynchronous) ? kMelder_asynchronicityLevel_INTERRUPTABLE :
 		kMelder_asynchronicityLevel_ASYNCHRONOUS;
 	if (my asynchronicity > preferences. maximumAsynchronicity)
 		my asynchronicity = preferences. maximumAsynchronicity;
@@ -409,6 +525,7 @@ void MelderAudio_play16 (const int16_t *buffer, long sampleRate, long numberOfSa
 	my usePortAudio = preferences. outputUsesPortAudio;
 	my explicitStop = MelderAudio_IMPLICIT;
 	my fakeMono = false;
+	my volatile_interrupted = 0;
 
 	my samplesLeft = numberOfSamples;
 	my samplesSent = 0;
@@ -426,6 +543,36 @@ void MelderAudio_play16 (const int16_t *buffer, long sampleRate, long numberOfSa
 		PaStreamParameters outputParameters = { 0 };
 		outputParameters. device = Pa_GetDefaultOutputDevice ();
 		const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo (outputParameters. device);
+		if (my numberOfChannels > deviceInfo -> maxOutputChannels) {
+			my numberOfChannels = deviceInfo -> maxOutputChannels;
+		}
+		if (numberOfChannels > my numberOfChannels) {
+			/*
+			 * Redistribute the in channels over the out channels.
+			 */
+			if (numberOfChannels == 4 && my numberOfChannels == 2) {   // a common case
+				int16_t *in = & my buffer [0], *out = & my buffer [0];
+				for (long isamp = 1; isamp <= numberOfSamples; isamp ++) {
+					long in1 = *in ++, in2 = *in ++, in3 = *in ++, in4 = *in ++;
+					*out ++ = (in1 + in2) / 2;
+					*out ++ = (in3 + in4) / 2;
+				}
+			} else {
+				int16_t *in = & my buffer [0], *out = & my buffer [0];
+				for (long isamp = 1; isamp <= numberOfSamples; isamp ++) {
+					for (long iout = 1; iout <= my numberOfChannels; iout ++) {
+						long outValue = 0;
+						long numberOfIn = numberOfChannels / my numberOfChannels;
+						if (iout == my numberOfChannels)
+							numberOfIn += numberOfChannels % my numberOfChannels;
+						for (long iin = 1; iin <= numberOfIn; iin ++)
+							outValue += *in ++;
+						outValue /= numberOfIn;
+						*out ++ = outValue;
+					}
+				}
+			}
+		}
 		outputParameters. channelCount = my numberOfChannels;
 		outputParameters. sampleFormat = paInt16;
 		if (deviceInfo != NULL) outputParameters. suggestedLatency = deviceInfo -> defaultLowOutputLatency;
@@ -439,12 +586,25 @@ void MelderAudio_play16 (const int16_t *buffer, long sampleRate, long numberOfSa
 		my paStartingTime = Pa_GetStreamTime (my stream);
 		if (my asynchronicity <= kMelder_asynchronicityLevel_INTERRUPTABLE) {
 			for (;;) {
-				double timeElapsed = Melder_clock () - theStartingTime - Pa_GetStreamInfo (my stream) -> outputLatency;
-				my samplesPlayed = timeElapsed * my sampleRate;
-				if (my samplesPlayed >= my numberOfSamples + my sampleRate / 20) {
-					my samplesPlayed = my numberOfSamples;
-					break;
-				}
+				#if defined (linux)
+					/*
+					 * This is how PortAudio was designed to work.
+					 */
+					if (my samplesLeft == 0) {
+						my samplesPlayed = my numberOfSamples;
+						break;
+					}
+				#else
+					/*
+					 * A version that doesn't trust that the stream callback will complete.
+					 */
+					double timeElapsed = Melder_clock () - theStartingTime - Pa_GetStreamInfo (my stream) -> outputLatency;
+					long samplesPlayed = timeElapsed * my sampleRate;
+					if (samplesPlayed >= my numberOfSamples + my sampleRate / 20) {
+						my samplesPlayed = my numberOfSamples;
+						break;
+					}
+				#endif
 				bool interrupted = false;
 				if (my asynchronicity != kMelder_asynchronicityLevel_SYNCHRONOUS && my callback &&
 					! my callback (my closure, my samplesPlayed))
@@ -454,8 +614,10 @@ void MelderAudio_play16 (const int16_t *buffer, long sampleRate, long numberOfSa
 				 * Do this on the lowest level that will work.
 				 */
 				if (my asynchronicity == kMelder_asynchronicityLevel_INTERRUPTABLE && ! interrupted) {
-					#if cocoa
-						// TODO: implement
+					#if gtk
+						// TODO: implement a reaction to the Escape key
+					#elif cocoa
+						// TODO: implement a reaction to the Escape key
 					#elif defined (macintosh)
 						EventRecord event;
 						if (EventAvail (keyDownMask, & event)) {
@@ -493,7 +655,9 @@ void MelderAudio_play16 (const int16_t *buffer, long sampleRate, long numberOfSa
 			if (my samplesPlayed != my numberOfSamples) {
 				Melder_fatal ("Played %ld instead of %ld samples.", my samplesPlayed, my numberOfSamples);
 			}
-			Pa_AbortStream (my stream);
+			#ifndef linux
+				Pa_AbortStream (my stream);
+			#endif
 		} else /* my asynchronicity == kMelder_asynchronicityLevel_ASYNCHRONOUS */ {
 			#if cocoa
 				CFRunLoopTimerContext context = { 0, NULL, NULL, NULL, NULL };
@@ -545,7 +709,7 @@ void MelderAudio_play16 (const int16_t *buffer, long sampleRate, long numberOfSa
 						for (long isamp = 0; isamp < numberOfSamples; isamp ++) {
 							newBuffer [isamp + isamp] = newBuffer [isamp + isamp + 1] = buffer [isamp];
 						}
-						my buffer = (const int16_t *) newBuffer;
+						my buffer = newBuffer;
 						my numberOfChannels = 2;
 					} else {
 						Melder_throw ("Cannot set number of channels to .", my numberOfChannels, ".");

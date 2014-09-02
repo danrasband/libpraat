@@ -1,6 +1,6 @@
 /* OTGrammar_ex_metrics.cpp
  *
- * Copyright (C) 2001-2011 Paul Boersma
+ * Copyright (C) 2001-2011,2014 Paul Boersma
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -441,7 +441,6 @@ OTGrammar OTGrammar_create_metrics (int equal_footForm_wsp, int trochaicityConst
 	int includeClashAndLapse, int includeCodas)
 {
 	try {
-		int numberOfSyllables;
 		int underlyingWeightPattern [1+7], maximumUnderlyingWeight = includeCodas ? 3 : 2;
 		long numberOfTableaus = includeCodas ? 9 + 27 + 81 + 243 + 2 : 62;
 		autoOTGrammar me = Thing_new (OTGrammar);
@@ -463,7 +462,7 @@ OTGrammar OTGrammar_create_metrics (int equal_footForm_wsp, int trochaicityConst
 			my constraints [WSP]. ranking = 102.0;
 		}
 		my tableaus = NUMvector <structOTGrammarTableau> (1, numberOfTableaus);
-		for (numberOfSyllables = 2; numberOfSyllables <= 7; numberOfSyllables ++) {
+		for (int numberOfSyllables = 2; numberOfSyllables <= 7; numberOfSyllables ++) {
 			long numberOfUnderlyingWeightPatterns = numberOfSyllables > 5 ? 1 : (long) floor (pow (maximumUnderlyingWeight, numberOfSyllables) + 0.5);
 			for (long isyll = 1; isyll <= numberOfSyllables; isyll ++) {
 				underlyingWeightPattern [isyll] = 1;   /* L or cv */

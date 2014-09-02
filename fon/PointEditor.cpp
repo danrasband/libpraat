@@ -1,6 +1,6 @@
 /* PointEditor.cpp
  *
- * Copyright (C) 1992-2011,2012 Paul Boersma
+ * Copyright (C) 1992-2011,2012,2014 Paul Boersma
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -217,7 +217,7 @@ PointEditor PointEditor_create (const wchar_t *title, PointProcess point, Sound 
 		if (sound) {
 			my monoSound = Sound_convertToMono (sound);
 		}
-		my structTimeSoundEditor :: f_init (title, point, my monoSound, false);
+		TimeSoundEditor_init (me.peek(), title, point, my monoSound, false);
 		return me.transfer();
 	} catch (MelderError) {
 		Melder_throw ("PointProcess window not created.");

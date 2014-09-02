@@ -3016,7 +3016,7 @@ DO
 	LOOP {
 		iam (Movie);
 		autoPraatPicture picture;
-		my f_paintOneImage (GRAPHICS, GET_INTEGER (L"Frame number"),
+		Movie_paintOneImage (me, GRAPHICS, GET_INTEGER (L"Frame number"),
 			GET_REAL (L"From x ="), GET_REAL (L"To x ="), GET_REAL (L"From y ="), GET_REAL (L"To y ="));
 	}
 END
@@ -3070,11 +3070,11 @@ FORM (Photo_create, L"Create Photo", L"Create Photo...")
 	POSITIVE (L"dy", L"1.0")
 	REAL (L"y1", L"1.0")
 	LABEL (L"", L"Red formula:")
-	TEXTFIELD (L"redFormula", L"x*y")
+	TEXTFIELD (L"redFormula", L"x*y/100")
 	LABEL (L"", L"Green formula:")
-	TEXTFIELD (L"greenFormula", L"x*y")
+	TEXTFIELD (L"greenFormula", L"x*y/1000")
 	LABEL (L"", L"Blue formula:")
-	TEXTFIELD (L"blueFormula", L"x*y")
+	TEXTFIELD (L"blueFormula", L"x*y/100")
 	OK
 DO
 	double xmin = GET_REAL (L"xmin"), xmax = GET_REAL (L"xmax");
@@ -3095,11 +3095,11 @@ FORM (Photo_createSimple, L"Create simple Photo", L"Create simple Photo...")
 	NATURAL (L"Number of rows", L"10")
 	NATURAL (L"Number of columns", L"10")
 	LABEL (L"", L"Red formula:")
-	TEXTFIELD (L"redFormula", L"x*y")
+	TEXTFIELD (L"redFormula", L"x*y/100")
 	LABEL (L"", L"Green formula:")
-	TEXTFIELD (L"greenFormula", L"x*y")
+	TEXTFIELD (L"greenFormula", L"x*y/1000")
 	LABEL (L"", L"Blue formula:")
-	TEXTFIELD (L"blueFormula", L"x*y")
+	TEXTFIELD (L"blueFormula", L"x*y/100")
 	OK
 DO
 	autoPhoto me = Photo_createSimple (GET_INTEGER (L"Number of rows"), GET_INTEGER (L"Number of columns"));
@@ -3223,7 +3223,7 @@ DO
 	LOOP {
 		iam (Photo);
 		autoPraatPicture picture;
-		my f_paintCells (GRAPHICS,
+		Photo_paintCells (me, GRAPHICS,
 			GET_REAL (L"From x ="), GET_REAL (L"To x ="), GET_REAL (L"From y ="), GET_REAL (L"To y ="));
 	}
 END
@@ -3238,7 +3238,7 @@ DO
 	LOOP {
 		iam (Photo);
 		autoPraatPicture picture;
-		my f_paintImage (GRAPHICS,
+		Photo_paintImage (me, GRAPHICS,
 			GET_REAL (L"From x ="), GET_REAL (L"To x ="), GET_REAL (L"From y ="), GET_REAL (L"To y ="));
 	}
 END
@@ -3246,56 +3246,56 @@ END
 FORM_WRITE (Photo_saveAsAppleIconFile, L"Save as Apple icon file", 0, L"icns")
 	LOOP {
 		iam (Photo);
-		my f_saveAsAppleIconFile (file);
+		Photo_saveAsAppleIconFile (me, file);
 	}
 END
 
 FORM_WRITE (Photo_saveAsGIF, L"Save as GIF file", 0, L"gif")
 	LOOP {
 		iam (Photo);
-		my f_saveAsGIF (file);
+		Photo_saveAsGIF (me, file);
 	}
 END
 
 FORM_WRITE (Photo_saveAsJPEG, L"Save as JPEG file", 0, L"jpg")
 	LOOP {
 		iam (Photo);
-		my f_saveAsJPEG (file);
+		Photo_saveAsJPEG (me, file);
 	}
 END
 
 FORM_WRITE (Photo_saveAsJPEG2000, L"Save as JPEG-2000 file", 0, L"jpg")
 	LOOP {
 		iam (Photo);
-		my f_saveAsJPEG2000 (file);
+		Photo_saveAsJPEG2000 (me, file);
 	}
 END
 
 FORM_WRITE (Photo_saveAsPNG, L"Save as PNG file", 0, L"png")
 	LOOP {
 		iam (Photo);
-		my f_saveAsPNG (file);
+		Photo_saveAsPNG (me, file);
 	}
 END
 
 FORM_WRITE (Photo_saveAsTIFF, L"Save as TIFF file", 0, L"tiff")
 	LOOP {
 		iam (Photo);
-		my f_saveAsTIFF (file);
+		Photo_saveAsTIFF (me, file);
 	}
 END
 
 FORM_WRITE (Photo_saveAsWindowsBitmapFile, L"Save as Windows bitmap file", 0, L"bmp")
 	LOOP {
 		iam (Photo);
-		my f_saveAsWindowsBitmapFile (file);
+		Photo_saveAsWindowsBitmapFile (me, file);
 	}
 END
 
 FORM_WRITE (Photo_saveAsWindowsIconFile, L"Save as Windows icon file", 0, L"ico")
 	LOOP {
 		iam (Photo);
-		my f_saveAsWindowsIconFile (file);
+		Photo_saveAsWindowsIconFile (me, file);
 	}
 END
 
@@ -3304,28 +3304,28 @@ END
 DIRECT (Photo_Matrix_replaceBlue)
 	Photo me = FIRST (Photo);
 	Matrix thee = FIRST (Matrix);
-	my f_replaceBlue (thee);
+	Photo_replaceBlue (me, thee);
 	praat_dataChanged (me);
 END
 
 DIRECT (Photo_Matrix_replaceGreen)
 	Photo me = FIRST (Photo);
 	Matrix thee = FIRST (Matrix);
-	my f_replaceGreen (thee);
+	Photo_replaceGreen (me, thee);
 	praat_dataChanged (me);
 END
 
 DIRECT (Photo_Matrix_replaceRed)
 	Photo me = FIRST (Photo);
 	Matrix thee = FIRST (Matrix);
-	my f_replaceRed (thee);
+	Photo_replaceRed (me, thee);
 	praat_dataChanged (me);
 END
 
 DIRECT (Photo_Matrix_replaceTransparency)
 	Photo me = FIRST (Photo);
 	Matrix thee = FIRST (Matrix);
-	my f_replaceTransparency (thee);
+	Photo_replaceTransparency (me, thee);
 	praat_dataChanged (me);
 END
 
@@ -6777,10 +6777,12 @@ praat_addAction1 (classMatrix, 0, L"Analyse", 0, 0, 0);
 		praat_addAction1 (classPhoto, 0, L"Extract blue", 0, 1, DO_Photo_extractBlue);
 		praat_addAction1 (classPhoto, 0, L"Extract transparency", 0, 1, DO_Photo_extractTransparency);
 	praat_addAction1 (classPhoto, 1, L"Save as PNG file...", 0, 0, DO_Photo_saveAsPNG);
-	praat_addAction1 (classPhoto, 1, L"Save as TIFF file...", 0, 0, DO_Photo_saveAsTIFF);
-	praat_addAction1 (classPhoto, 1, L"Save as GIF file...", 0, 0, DO_Photo_saveAsGIF);
-	praat_addAction1 (classPhoto, 1, L"Save as Windows bitmap file...", 0, 0, DO_Photo_saveAsWindowsBitmapFile);
-	praat_addAction1 (classPhoto, 1, L"Save as lossy JPEG file...", 0, 0, DO_Photo_saveAsJPEG);
+	#if defined (macintosh) || defined (_WIN32)
+		praat_addAction1 (classPhoto, 1, L"Save as TIFF file...", 0, 0, DO_Photo_saveAsTIFF);
+		praat_addAction1 (classPhoto, 1, L"Save as GIF file...", 0, 0, DO_Photo_saveAsGIF);
+		praat_addAction1 (classPhoto, 1, L"Save as Windows bitmap file...", 0, 0, DO_Photo_saveAsWindowsBitmapFile);
+		praat_addAction1 (classPhoto, 1, L"Save as lossy JPEG file...", 0, 0, DO_Photo_saveAsJPEG);
+	#endif
 	#if defined (macintosh)
 		praat_addAction1 (classPhoto, 1, L"Save as JPEG-2000 file...", 0, 0, DO_Photo_saveAsJPEG2000);
 		praat_addAction1 (classPhoto, 1, L"Save as Apple icon file...", 0, 0, DO_Photo_saveAsAppleIconFile);

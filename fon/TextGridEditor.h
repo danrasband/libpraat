@@ -2,7 +2,7 @@
 #define _TextGridEditor_h_
 /* TextGridEditor.h
  *
- * Copyright (C) 1992-2011,2012 Paul Boersma
+ * Copyright (C) 1992-2011,2012,2014 Paul Boersma
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,12 +34,6 @@ Thing_define (TextGridEditor, TimeSoundAnalysisEditor) {
 		bool suppressRedraw;
 		wchar_t *findString;
 		GuiMenuItem extractSelectedTextGridPreserveTimesButton, extractSelectedTextGridTimeFromZeroButton;
-	// functions:
-	public:
-		void f_init (const wchar_t *title, TextGrid grid,
-			Sampled sound,   // either a Sound or a LongSound, or null
-			bool ownSound,
-			SpellingChecker spellingChecker);
 	// overridden methods:
 		virtual void v_info ();
 		virtual void v_createChildren ();
@@ -70,10 +64,13 @@ Thing_define (TextGridEditor, TimeSoundAnalysisEditor) {
 	#include "TextGridEditor_prefs.h"
 };
 
+void TextGridEditor_init (TextGridEditor me, const wchar_t *title, TextGrid grid, Sampled sound, bool ownSound, SpellingChecker spellingChecker, const char *callbackSocket);
+
 TextGridEditor TextGridEditor_create (const wchar_t *title, TextGrid grid,
 	Sampled sound,   // either a Sound or a LongSound, or null
 	bool ownSound,
-	SpellingChecker spellingChecker);
+	SpellingChecker spellingChecker,
+	const char *callbackSocket);
 
 /* End of file TextGridEditor.h */
 #endif

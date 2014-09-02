@@ -52,29 +52,9 @@ void structSampled :: v_scaleX (double xminfrom, double xmaxfrom, double xminto,
 	dx *= (xmaxto - xminto) / (xmaxfrom - xminfrom);
 }
 
-double Sampled_indexToX (Sampled me, long i) {
-	return my x1 + (i - 1) * my dx;
-}
-
-double Sampled_xToIndex (Sampled me, double x) {
-	return (x - my x1) / my dx + 1;
-}
-
-long Sampled_xToLowIndex (Sampled me, double x) {
-	return (long) floor ((x - my x1) / my dx) + 1;
-}
-
-long Sampled_xToHighIndex (Sampled me, double x) {
-	return (long) ceil ((x - my x1) / my dx) + 1;
-}
-
-long Sampled_xToNearestIndex (Sampled me, double x) {
-	return (long) floor ((x - my x1) / my dx + 1.5);
-}
-
 long Sampled_getWindowSamples (Sampled me, double xmin, double xmax, long *ixmin, long *ixmax) {
 	double rixmin = 1.0 + ceil ((xmin - my x1) / my dx);
-	double rixmax = 1.0 + floor ((xmax - my x1) / my dx);
+	double rixmax = 1.0 + floor ((xmax - my x1) / my dx);   // could be above 32-bit LONG_MAX
 	*ixmin = rixmin < 1.0 ? 1 : (long) rixmin;
 	*ixmax = rixmax > (double) my nx ? my nx : (long) rixmax;
 	if (*ixmin > *ixmax) return 0;

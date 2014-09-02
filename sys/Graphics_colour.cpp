@@ -56,7 +56,8 @@ Graphics_Colour
 	Graphics_OLIVE = { 0.5, 0.5, 0.0 },
 	Graphics_PINK = { 1.0, 0.75, 0.75 },
 	Graphics_SILVER = { 0.75, 0.75, 0.75 },
-	Graphics_GREY = { 0.5, 0.5, 0.5 };
+	Graphics_GREY = { 0.5, 0.5, 0.5 },
+	Graphics_WINDOW_BACKGROUND_COLOUR = { 0.90, 0.90, 0.85 };
 
 const wchar_t * Graphics_Colour_name (Graphics_Colour colour) {
 	return
@@ -121,6 +122,11 @@ void Graphics_setColour (Graphics me, Graphics_Colour colour) {
 	my colour = colour;
 	_Graphics_setColour (me, colour);
 	if (my recording) { op (SET_RGB_COLOUR, 3); put (colour. red); put (colour. green); put (colour. blue); }
+}
+
+void Graphics_setColourScale (Graphics me, enum kGraphics_colourScale colourScale) {
+	my colourScale = colourScale;
+	if (my recording) { op (SET_COLOUR_SCALE, 1); put (colourScale); }
 }
 
 void _Graphics_setGrey (Graphics graphics, double fgrey) {
@@ -347,9 +353,9 @@ void Graphics_xorOn (Graphics graphics, Graphics_Colour colour) {
 		GraphicsScreen me = static_cast <GraphicsScreen> (graphics);
 		#if cairo
 			GdkColor colourXorWhite = { 0,
-				(uint16_t) (colour. red * 65535.0) ^ 0xFFFF,
-				(uint16_t) (colour. green * 65535.0) ^ 0xFFFF,
-				(uint16_t) (colour. blue * 65535.0) ^ 0xFFFF };
+				(uint16_t) ((uint16_t) (colour. red * 65535.0) ^ (uint16_t) 0xFFFF),
+				(uint16_t) ((uint16_t) (colour. green * 65535.0) ^ (uint16_t) 0xFFFF),
+				(uint16_t) ((uint16_t) (colour. blue * 65535.0) ^ (uint16_t) 0xFFFF) };
 			#if ALLOW_GDK_DRAWING
 				gdk_gc_set_rgb_fg_color (my d_gdkGraphicsContext, & colourXorWhite);
 				gdk_gc_set_function (my d_gdkGraphicsContext, GDK_XOR);
@@ -401,6 +407,10 @@ void Graphics_xorOff (Graphics graphics) {
 
 Graphics_Colour Graphics_inqColour (Graphics me) {
 	return my colour;
+}
+
+enum kGraphics_colourScale Graphics_inqColourScale (Graphics me) {
+	return my colourScale;
 }
 
 /* End of file Graphics_colour.cpp */
