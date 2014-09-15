@@ -69,6 +69,7 @@ using namespace std;
 #include "flac_FLAC_stream_encoder.h"
 #include "abcio.h"
 #include "melder.h"
+#include <string.h>
 
 #if defined (macintosh)
 	#include <sys/stat.h>
@@ -167,6 +168,9 @@ void Melder_8bitFileRepresentationToWcs_inline (const char *path, wchar_t *wpath
 
 MelderFile MelderFile_new (void) {
 	MelderFile retVal = (MelderFile)malloc(sizeof(structMelderFile));
+#ifdef PRAAT_LIB
+	memset(retVal, 0, sizeof(structMelderFile));
+#endif
 	return retVal;
 }
 

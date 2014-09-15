@@ -19,6 +19,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#ifdef PRAAT_LIB
+#include "praatlib.h"
+#endif
+
 /* The root class of all objects. */
 
 /* Anyone who uses Thing can also use: */
@@ -135,7 +139,7 @@ class structThing {
 
 /* All functions with 'Thing me' as the first argument assume that it is not NULL. */
 
-const wchar_t * Thing_className (Thing me);
+PRAAT_LIB_EXPORT const wchar_t * Thing_className (Thing me);
 /* Return your class name. */
 
 bool Thing_member (Thing me, ClassInfo klas);
@@ -152,8 +156,8 @@ bool Thing_subclass (ClassInfo klas, ClassInfo ancestor);
 	E.g., Thing_subclass (classX, classThing) will always return true.
 */
 
-void Thing_info (Thing me);
-void Thing_infoWithId (Thing me, unsigned long id);
+PRAAT_LIB_EXPORT void Thing_info (Thing me);
+PRAAT_LIB_EXPORT void Thing_infoWithId (Thing me, unsigned long id);
 
 #define Thing_new(Klas)  (Klas) _Thing_new (class##Klas)
 /*
@@ -195,7 +199,7 @@ void Thing_recognizeClassByOtherName (ClassInfo readableClass, const wchar_t *ot
 long Thing_listReadableClasses (void);
 
 Any Thing_newFromClassNameA (const char *className);
-Any Thing_newFromClassName (const wchar_t *className);
+PRAAT_LIB_EXPORT Any Thing_newFromClassName (const wchar_t *className);
 /*
 	Function:
 		return a new object of class 'className', or NULL if the class name is not recognized.
@@ -222,11 +226,11 @@ ClassInfo Thing_classFromClassName (const wchar_t *className);
 	((klas) _Thing_dummyObject (class##klas))
 Thing _Thing_dummyObject (ClassInfo classInfo);
 
-wchar_t * Thing_getName (Thing me);
+PRAAT_LIB_EXPORT wchar_t * Thing_getName (Thing me);
 /* Return a pointer to your internal name (which can be NULL). */
 wchar_t * Thing_messageName (Thing me);
 
-void Thing_setName (Thing me, const wchar_t *name);
+PRAAT_LIB_EXPORT void Thing_setName (Thing me, const wchar_t *name);
 /*
 	Function:
 		remember that you are called 'name'.
@@ -238,7 +242,7 @@ void Thing_setName (Thing me, const wchar_t *name);
 	Klas var = static_cast <Klas> (expr);   /* The compiler checks this. */ \
 	Melder_assert (var == NULL || Thing_member (var, class##Klas));
 
-void Thing_swap (Thing me, Thing thee);
+PRAAT_LIB_EXPORT void Thing_swap (Thing me, Thing thee);
 /*
 	Function:
 		Swap my and thy contents.
@@ -253,7 +257,7 @@ void Thing_swap (Thing me, Thing thee);
 
 /* For the macros. */
 
-void _Thing_forget (Thing me);
+PRAAT_LIB_EXPORT void _Thing_forget (Thing me);
 void _Thing_forget_nozero (Thing me);
 void * _Thing_check (Thing me, ClassInfo table, const char *fileName, int line);
 	/* Macros 'iam', 'thouart', 'heis'. */

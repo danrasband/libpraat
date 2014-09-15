@@ -21,7 +21,11 @@
 #include "Intensity.h"
 #include "IntensityTier.h"
 
-Intensity Sound_to_Intensity (Sound me, double minimumPitch, double timeStep, int subtractMean);
+#ifdef PRAAT_LIB
+#include "praatlib.h"
+#endif
+
+PRAAT_LIB_EXPORT Intensity Sound_to_Intensity (Sound me, double minimumPitch, double timeStep, int subtractMean);
 /*
 	Function:
 		smooth away the periodic part of a signal,
