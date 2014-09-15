@@ -15,7 +15,7 @@ LINK = /mingw64/bin/g++
 
 EXECUTABLE = Praat.exe
 
-LIBS = -L/mingw64/lib -lwinmm -lwsock32 -lcomctl32 -lole32 -lgdi32 /mingw64/lib/GdiPlus.dll -lcomdlg32 -static-libgcc -static-libstdc++ -mwindows
+LIBS = -L/mingw64/lib -lwinmm -lwsock32 -lcomctl32 -lole32 -lgdi32 /mingw64/lib/GdiPlus.dll -lcomdlg32 -lpthread -static -static-libgcc -static-libstdc++ -mwindows
 
 AR = /mingw64/bin/ar
 RANLIB = /mingw64/bin/ranlib
