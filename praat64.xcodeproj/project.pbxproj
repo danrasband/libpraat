@@ -1300,6 +1300,7 @@
 		236DE70A139EA63F00EC42BA /* Sound_and_FilterBank.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 236DE709139EA63F00EC42BA /* Sound_and_FilterBank.cpp */; };
 		236DE70C139EA64A00EC42BA /* Sound_extensions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 236DE70B139EA64A00EC42BA /* Sound_extensions.cpp */; };
 		236DE70E139EA65800EC42BA /* TableOfReal_and_SVD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 236DE70D139EA65800EC42BA /* TableOfReal_and_SVD.cpp */; };
+		236EDF601981A242003299FA /* OTMulti_ex_metrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 236EDF5F1981A242003299FA /* OTMulti_ex_metrics.cpp */; };
 		2372DB4D15E8FAE800B6E917 /* GuiScrolledWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2372DB4C15E8FAE800B6E917 /* GuiScrolledWindow.cpp */; };
 		2372DB4F15E8FAF300B6E917 /* GuiScrollBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2372DB4E15E8FAF300B6E917 /* GuiScrollBar.cpp */; };
 		2372DB5115E8FAFF00B6E917 /* GuiScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2372DB5015E8FAFF00B6E917 /* GuiScale.cpp */; };
@@ -1323,6 +1324,7 @@
 		237BD3C60EC0E4A000823A87 /* melder_readtext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 237BD3C50EC0E4A000823A87 /* melder_readtext.cpp */; };
 		237CAC370FFF852A00CB8800 /* KNN_threads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 237CAC360FFF852A00CB8800 /* KNN_threads.cpp */; };
 		237CAC390FFF853000CB8800 /* KNN_threads.h in Headers */ = {isa = PBXBuildFile; fileRef = 237CAC380FFF853000CB8800 /* KNN_threads.h */; };
+		238A24771943B2710024CA07 /* MelderThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 238A24761943B2710024CA07 /* MelderThread.h */; };
 		238F5C08132FB5090074D5F9 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 238F5C07132FB5090074D5F9 /* Table.cpp */; };
 		23958E3D11FDA7C4004961F4 /* GuiFileSelect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23958E3C11FDA7C4004961F4 /* GuiFileSelect.cpp */; };
 		2395B3F30D158F14001028D9 /* GuiButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2395B3F20D158F14001028D9 /* GuiButton.cpp */; };
@@ -1386,6 +1388,11 @@
 		23CB6A0B0F586E3D00C9D2F8 /* Network.h in Headers */ = {isa = PBXBuildFile; fileRef = 23CB6A090F586E3D00C9D2F8 /* Network.h */; };
 		23CBA3890C8DF07500F61B9D /* TimeSoundAnalysisEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = 23CBA3880C8DF07500F61B9D /* TimeSoundAnalysisEditor.h */; };
 		23CBA3A70C8DF42A00F61B9D /* TimeSoundAnalysisEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23CBA3A60C8DF42A00F61B9D /* TimeSoundAnalysisEditor.cpp */; };
+		23CE81CB19645036009BB061 /* DataModeler_def.h in Headers */ = {isa = PBXBuildFile; fileRef = 23CE81C819645036009BB061 /* DataModeler_def.h */; };
+		23CE81CC19645036009BB061 /* DataModeler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23CE81C919645036009BB061 /* DataModeler.cpp */; };
+		23CE81CD19645036009BB061 /* DataModeler.h in Headers */ = {isa = PBXBuildFile; fileRef = 23CE81CA19645036009BB061 /* DataModeler.h */; };
+		23CE81CF19645053009BB061 /* manual_DataModeler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23CE81CE19645053009BB061 /* manual_DataModeler.cpp */; };
+		23CE81D519645926009BB061 /* praat_DataModeler_init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23CE81D419645926009BB061 /* praat_DataModeler_init.cpp */; };
 		23D164B10F2398B3003B75FE /* Interpreter_decl.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D164B00F2398B3003B75FE /* Interpreter_decl.h */; };
 		23D2D2D513B4DF53001B6704 /* DLL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23D2D2D413B4DF53001B6704 /* DLL.cpp */; };
 		23D2D2D713B4DF61001B6704 /* DLL.h in Headers */ = {isa = PBXBuildFile; fileRef = 23D2D2D613B4DF61001B6704 /* DLL.h */; };
@@ -1914,7 +1921,7 @@
 		23FE2D480E4F3D44003EEE43 /* Pattern_to_Categories_cluster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23FE2D430E4F3D44003EEE43 /* Pattern_to_Categories_cluster.cpp */; };
 		23FE2D490E4F3D44003EEE43 /* Pattern_to_Categories_cluster.h in Headers */ = {isa = PBXBuildFile; fileRef = 23FE2D440E4F3D44003EEE43 /* Pattern_to_Categories_cluster.h */; };
 		23FE2D4A0E4F3D44003EEE43 /* praat_contrib_Ola_KNN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23FE2D450E4F3D44003EEE43 /* praat_contrib_Ola_KNN.cpp */; };
-		B41993A7193DF42E0034928D /* praatlib.h in Headers */ = {isa = PBXBuildFile; fileRef = B41993A6193DF42E0034928D /* praatlib.h */; };
+		B458AFFD19B8B968001EA04C /* praatlib.h in Headers */ = {isa = PBXBuildFile; fileRef = B458AFFC19B8B968001EA04C /* praatlib.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -3212,6 +3219,7 @@
 		236DE709139EA63F00EC42BA /* Sound_and_FilterBank.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sound_and_FilterBank.cpp; path = dwtools/Sound_and_FilterBank.cpp; sourceTree = "<group>"; };
 		236DE70B139EA64A00EC42BA /* Sound_extensions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sound_extensions.cpp; path = dwtools/Sound_extensions.cpp; sourceTree = "<group>"; };
 		236DE70D139EA65800EC42BA /* TableOfReal_and_SVD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TableOfReal_and_SVD.cpp; path = dwtools/TableOfReal_and_SVD.cpp; sourceTree = "<group>"; };
+		236EDF5F1981A242003299FA /* OTMulti_ex_metrics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OTMulti_ex_metrics.cpp; path = gram/OTMulti_ex_metrics.cpp; sourceTree = "<group>"; };
 		2372DB4C15E8FAE800B6E917 /* GuiScrolledWindow.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = GuiScrolledWindow.cpp; path = sys/GuiScrolledWindow.cpp; sourceTree = "<group>"; };
 		2372DB4E15E8FAF300B6E917 /* GuiScrollBar.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = GuiScrollBar.cpp; path = sys/GuiScrollBar.cpp; sourceTree = "<group>"; };
 		2372DB5015E8FAFF00B6E917 /* GuiScale.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = GuiScale.cpp; path = sys/GuiScale.cpp; sourceTree = "<group>"; };
@@ -3234,6 +3242,7 @@
 		237BD3C50EC0E4A000823A87 /* melder_readtext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = melder_readtext.cpp; path = sys/melder_readtext.cpp; sourceTree = "<group>"; };
 		237CAC360FFF852A00CB8800 /* KNN_threads.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KNN_threads.cpp; path = contrib/ola/KNN_threads.cpp; sourceTree = "<group>"; };
 		237CAC380FFF853000CB8800 /* KNN_threads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KNN_threads.h; path = contrib/ola/KNN_threads.h; sourceTree = "<group>"; };
+		238A24761943B2710024CA07 /* MelderThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MelderThread.h; path = sys/MelderThread.h; sourceTree = "<group>"; };
 		238F5C07132FB5090074D5F9 /* Table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Table.cpp; path = stat/Table.cpp; sourceTree = "<group>"; };
 		23958E3C11FDA7C4004961F4 /* GuiFileSelect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = GuiFileSelect.cpp; path = sys/GuiFileSelect.cpp; sourceTree = "<group>"; };
 		2395B3F20D158F14001028D9 /* GuiButton.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = GuiButton.cpp; path = sys/GuiButton.cpp; sourceTree = "<group>"; };
@@ -3297,6 +3306,11 @@
 		23CB6A090F586E3D00C9D2F8 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = gram/Network.h; sourceTree = "<group>"; };
 		23CBA3880C8DF07500F61B9D /* TimeSoundAnalysisEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeSoundAnalysisEditor.h; path = fon/TimeSoundAnalysisEditor.h; sourceTree = "<group>"; };
 		23CBA3A60C8DF42A00F61B9D /* TimeSoundAnalysisEditor.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = TimeSoundAnalysisEditor.cpp; path = fon/TimeSoundAnalysisEditor.cpp; sourceTree = "<group>"; };
+		23CE81C819645036009BB061 /* DataModeler_def.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataModeler_def.h; path = dwtools/DataModeler_def.h; sourceTree = "<group>"; };
+		23CE81C919645036009BB061 /* DataModeler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataModeler.cpp; path = dwtools/DataModeler.cpp; sourceTree = "<group>"; };
+		23CE81CA19645036009BB061 /* DataModeler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataModeler.h; path = dwtools/DataModeler.h; sourceTree = "<group>"; };
+		23CE81CE19645053009BB061 /* manual_DataModeler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = manual_DataModeler.cpp; path = dwtools/manual_DataModeler.cpp; sourceTree = "<group>"; };
+		23CE81D419645926009BB061 /* praat_DataModeler_init.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = praat_DataModeler_init.cpp; path = dwtools/praat_DataModeler_init.cpp; sourceTree = "<group>"; };
 		23D164B00F2398B3003B75FE /* Interpreter_decl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Interpreter_decl.h; path = sys/Interpreter_decl.h; sourceTree = "<group>"; };
 		23D2D2D413B4DF53001B6704 /* DLL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DLL.cpp; path = dwsys/DLL.cpp; sourceTree = "<group>"; };
 		23D2D2D613B4DF61001B6704 /* DLL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DLL.h; path = dwsys/DLL.h; sourceTree = "<group>"; };
@@ -3827,7 +3841,7 @@
 		23FE2D430E4F3D44003EEE43 /* Pattern_to_Categories_cluster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pattern_to_Categories_cluster.cpp; path = contrib/ola/Pattern_to_Categories_cluster.cpp; sourceTree = "<group>"; };
 		23FE2D440E4F3D44003EEE43 /* Pattern_to_Categories_cluster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pattern_to_Categories_cluster.h; path = contrib/ola/Pattern_to_Categories_cluster.h; sourceTree = "<group>"; };
 		23FE2D450E4F3D44003EEE43 /* praat_contrib_Ola_KNN.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = praat_contrib_Ola_KNN.cpp; path = contrib/ola/praat_contrib_Ola_KNN.cpp; sourceTree = "<group>"; };
-		B41993A6193DF42E0034928D /* praatlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = praatlib.h; path = sys/praatlib.h; sourceTree = "<group>"; };
+		B458AFFC19B8B968001EA04C /* praatlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = praatlib.h; path = sys/praatlib.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4989,8 +5003,8 @@
 				233972041428EF0100003C8A /* EEG.h */,
 				233972061428F08A00003C8A /* EEG.cpp */,
 				2317A5F215231151004610E9 /* ERP_def.h */,
-				2317A5F315231151004610E9 /* ERP.cpp */,
 				2317A5F415231151004610E9 /* ERP.h */,
+				2317A5F315231151004610E9 /* ERP.cpp */,
 				2347C10216E1EB1A006B83AD /* ERPWindow_prefs.h */,
 				2317A5F515231151004610E9 /* ERPWindow.h */,
 				2317A5F615231151004610E9 /* ERPWindow.cpp */,
@@ -5236,12 +5250,14 @@
 			children = (
 				2327C6D513840F4100CCBCFB /* manual_dwtools.cpp */,
 				236DE6ED139EA58900EC42BA /* manual_BSS.cpp */,
+				23CE81CE19645053009BB061 /* manual_DataModeler.cpp */,
 				2327C6D713840F4D00CCBCFB /* manual_HMM.cpp */,
 				2327C6D913840F5E00CCBCFB /* manual_KlattGrid.cpp */,
 				2327C6DB13840F6600CCBCFB /* manual_MDS.cpp */,
 				2327C6DD13840F6E00CCBCFB /* manual_Permutation.cpp */,
 				236DE6F1139EA59B00EC42BA /* praat_David_init.cpp */,
 				236DE6EF139EA59300EC42BA /* praat_BSS_init.cpp */,
+				23CE81D419645926009BB061 /* praat_DataModeler_init.cpp */,
 				23D2D2D813B4DF82001B6704 /* praat_HMM_init.cpp */,
 				23BF802613BA25F100360796 /* praat_KlattGrid_init.cpp */,
 				236DE6F3139EA5AC00EC42BA /* praat_MDS_init.cpp */,
@@ -5279,6 +5295,9 @@
 				234C7A3913DEDF13001AE9B9 /* ContingencyTable.cpp */,
 				23E5C9C609A228FE004E41D5 /* Confusion.h */,
 				2327C6F11384101900CCBCFB /* Confusion.cpp */,
+				23CE81C819645036009BB061 /* DataModeler_def.h */,
+				23CE81CA19645036009BB061 /* DataModeler.h */,
+				23CE81C919645036009BB061 /* DataModeler.cpp */,
 				23E5CEBE09A22A44004E41D5 /* Discriminant_def.h */,
 				23E5C9C809A228FE004E41D5 /* Discriminant.h */,
 				23E18ADE138AD0F200915DC0 /* Discriminant.cpp */,
@@ -5426,6 +5445,7 @@
 				235EE1D10F57F25700DB7EA8 /* OTMulti_def.h */,
 				235EE1D30F57F25700DB7EA8 /* OTMulti.h */,
 				235EE1D20F57F25700DB7EA8 /* OTMulti.cpp */,
+				236EDF5F1981A242003299FA /* OTMulti_ex_metrics.cpp */,
 				235EE1D50F57F25700DB7EA8 /* OTMultiEditor.h */,
 				235EE1D40F57F25700DB7EA8 /* OTMultiEditor.cpp */,
 				235EE2110F57F35C00DB7EA8 /* OTGrammar_enums.h */,
@@ -5756,6 +5776,7 @@
 		23E5CAFE09A22901004E41D5 /* sys */ = {
 			isa = PBXGroup;
 			children = (
+				B458AFFC19B8B968001EA04C /* praatlib.h */,
 				23E5CB0009A22901004E41D5 /* praat.h */,
 				23E5CEE809A22A4B004E41D5 /* praatP.h */,
 				23E5CAFF09A22901004E41D5 /* praat.cpp */,
@@ -5840,7 +5861,6 @@
 				23E5CB3409A22902004E41D5 /* UiFile.cpp */,
 				2300251F0F26983000A930DB /* UiPause.h */,
 				230025210F26983700A930DB /* UiPause.cpp */,
-				B41993A6193DF42E0034928D /* praatlib.h */,
 			);
 			name = sys;
 			sourceTree = "<group>";
@@ -5958,6 +5978,7 @@
 				23660A620D510E4600FB6B8B /* melder_time.cpp */,
 				23EE67C909F2E63900E660F9 /* melder_token.cpp */,
 				2336B8F40EC1B02C002F03AD /* melder_writetext.cpp */,
+				238A24761943B2710024CA07 /* MelderThread.h */,
 			);
 			name = sys/melder;
 			sourceTree = "<group>";
@@ -6061,6 +6082,7 @@
 				23E5CFA009A22A57004E41D5 /* Matrix_Categories.h in Headers */,
 				23E5CFA209A22A57004E41D5 /* Matrix_extensions.h in Headers */,
 				23E5CFA409A22A57004E41D5 /* MDS.h in Headers */,
+				23CE81CD19645036009BB061 /* DataModeler.h in Headers */,
 				23E5CFA609A22A57004E41D5 /* Minimizers.h in Headers */,
 				23E5CFA809A22A57004E41D5 /* Pattern.h in Headers */,
 				23E5CFAA09A22A57004E41D5 /* PCA.h in Headers */,
@@ -6219,6 +6241,7 @@
 				23E5D12809A22A57004E41D5 /* SVD.h in Headers */,
 				23E5D12D09A22A57004E41D5 /* TableOfReal_and_SVD.h in Headers */,
 				23E5D12F09A22A57004E41D5 /* NUMcblas.h in Headers */,
+				B458AFFD19B8B968001EA04C /* praatlib.h in Headers */,
 				23E5D13109A22A57004E41D5 /* NUMclapack.h in Headers */,
 				23E5D13309A22A57004E41D5 /* NUMf2c.h in Headers */,
 				23E5D13809A22A57004E41D5 /* Praat_tests.h in Headers */,
@@ -6466,6 +6489,7 @@
 				2317A35F15230FF9004610E9 /* gsl_permute_short.h in Headers */,
 				2317A36015230FF9004610E9 /* gsl_permute_uchar.h in Headers */,
 				2317A36115230FF9004610E9 /* gsl_permute_uint.h in Headers */,
+				23CE81CB19645036009BB061 /* DataModeler_def.h in Headers */,
 				2317A36215230FF9004610E9 /* gsl_permute_ulong.h in Headers */,
 				2317A36315230FF9004610E9 /* gsl_permute_ushort.h in Headers */,
 				2317A36415230FF9004610E9 /* gsl_permute_vector_char.h in Headers */,
@@ -6666,6 +6690,7 @@
 				2317A5A715230FFA004610E9 /* flac_FLAC_stream_decoder.h in Headers */,
 				2317A5A815230FFA004610E9 /* flac_FLAC_stream_encoder.h in Headers */,
 				2317A5B015230FFA004610E9 /* flac_private_all.h in Headers */,
+				238A24771943B2710024CA07 /* MelderThread.h in Headers */,
 				2317A5B115230FFA004610E9 /* flac_private_autocpu.h in Headers */,
 				2317A5B215230FFA004610E9 /* flac_private_bitmath.h in Headers */,
 				2317A5B315230FFA004610E9 /* flac_private_bitreader.h in Headers */,
@@ -6689,7 +6714,6 @@
 				2317A5CA15230FFA004610E9 /* mad_config.h in Headers */,
 				2317A5CB15230FFA004610E9 /* mad_decoder.h in Headers */,
 				2317A5CD15230FFA004610E9 /* mad_fixed.h in Headers */,
-				B41993A7193DF42E0034928D /* praatlib.h in Headers */,
 				2317A5CF15230FFA004610E9 /* mad_frame.h in Headers */,
 				2317A5D115230FFA004610E9 /* mad_global.h in Headers */,
 				2317A5D215230FFA004610E9 /* mad_huffman.h in Headers */,
@@ -7173,6 +7197,7 @@
 				236DE700139EA5FC00EC42BA /* MFCC.cpp in Sources */,
 				236DE702139EA61000EC42BA /* Pitch_extensions.cpp in Sources */,
 				236DE704139EA61700EC42BA /* Polygon_extensions.cpp in Sources */,
+				23CE81D519645926009BB061 /* praat_DataModeler_init.cpp in Sources */,
 				236DE706139EA62B00EC42BA /* Polynomial.cpp in Sources */,
 				236DE708139EA63500EC42BA /* Resonator.cpp in Sources */,
 				236DE70A139EA63F00EC42BA /* Sound_and_FilterBank.cpp in Sources */,
@@ -7300,6 +7325,7 @@
 				2317A22715230FF9004610E9 /* gsl_cblas__sspmv.c in Sources */,
 				2317A22815230FF9004610E9 /* gsl_cblas__sspr.c in Sources */,
 				2317A22915230FF9004610E9 /* gsl_cblas__sspr2.c in Sources */,
+				23CE81CC19645036009BB061 /* DataModeler.cpp in Sources */,
 				2317A22A15230FF9004610E9 /* gsl_cblas__sswap.c in Sources */,
 				2317A22B15230FF9004610E9 /* gsl_cblas__ssymm.c in Sources */,
 				2317A22C15230FF9004610E9 /* gsl_cblas__ssymv.c in Sources */,
@@ -7595,6 +7621,7 @@
 				2317A39715230FF9004610E9 /* gsl_randist__hyperg.c in Sources */,
 				2317A39815230FF9004610E9 /* gsl_randist__landau.c in Sources */,
 				2317A39915230FF9004610E9 /* gsl_randist__laplace.c in Sources */,
+				236EDF601981A242003299FA /* OTMulti_ex_metrics.cpp in Sources */,
 				2317A39A15230FF9004610E9 /* gsl_randist__levy.c in Sources */,
 				2317A39B15230FF9004610E9 /* gsl_randist__logarithmic.c in Sources */,
 				2317A39C15230FF9004610E9 /* gsl_randist__logistic.c in Sources */,
@@ -7851,6 +7878,7 @@
 				2317A50D15230FFA004610E9 /* glpios03.c in Sources */,
 				2317A50E15230FFA004610E9 /* glpios04.c in Sources */,
 				2317A50F15230FFA004610E9 /* glpios05.c in Sources */,
+				23CE81CF19645053009BB061 /* manual_DataModeler.cpp in Sources */,
 				2317A51015230FFA004610E9 /* glpios06.c in Sources */,
 				2317A51115230FFA004610E9 /* glpios07.c in Sources */,
 				2317A51215230FFA004610E9 /* glpios08.c in Sources */,
@@ -8027,26 +8055,25 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
-				EXECUTABLE_EXTENSION = "";
 				EXECUTABLE_PREFIX = lib;
-				GCC_ALTIVEC_EXTENSIONS = NO;
 				GCC_CHAR_IS_UNSIGNED_CHAR = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_REUSE_STRINGS = YES;
 				GCC_SHORT_ENUMS = NO;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
-				GCC_TREAT_NONCONFORMANT_CODE_ERRORS_AS_WARNINGS = NO;
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
@@ -8062,7 +8089,7 @@
 				GCC_WARN_MISSING_PARENTHESES = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = NO;
 				GCC_WARN_PEDANTIC = NO;
-				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -8078,27 +8105,22 @@
 				INFOPLIST_PREPROCESS = YES;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = (
 					"-DuseCarbon=0",
 					"-Dmacintosh",
 					"$(OTHER_CFLAGS)",
-					"-fvisibility=default",
 					"-DPRAAT_LIB",
+					"-fvisibility=default",
 				);
 				PRODUCT_NAME = praat.dylib;
 				PROVISIONING_PROFILE = "";
-				REZ_SCRIPT_TYPE = Roman;
-				REZ_SUPPRESS_REDECLARED_RESOURCE_TYPE_WARNINGS = NO;
 				SDKROOT = macosx10.8;
 				SEPARATE_STRIP = NO;
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "";
 				VALID_ARCHS = x86_64;
-				WARNING_CFLAGS = (
-					"-Wundef",
-					"-Wshadow",
-				);
+				WARNING_CFLAGS = "-Wundef";
 			};
 			name = Configuration64;
 		};
