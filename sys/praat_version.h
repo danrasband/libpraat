@@ -13,15 +13,16 @@
 // create a struct for version information
 #include "praatlib.h"
 
-struct PraatVersion {
+struct structPraatVersion {
 	const char* versionStr;
 	const int version;
 	const int year;
 	const char* month;
 	const int day;
 };
+typedef struct structPraatVersion* PraatVersion;
 
-PRAAT_LIB_EXPORT struct PraatVersion* praat_version();
+PRAAT_LIB_EXPORT PraatVersion praat_version();
 #endif
 
 #endif

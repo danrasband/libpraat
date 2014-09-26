@@ -24,7 +24,7 @@
 #include "praat_version.h"
 
 
-static struct PraatVersion PRAAT_VERSION = {
+static struct structPraatVersion PRAAT_VERSION = {
 	PRAAT_VERSION_CSTR,
 	PRAAT_VERSION_NUM,
 	PRAAT_YEAR,
@@ -32,7 +32,7 @@ static struct PraatVersion PRAAT_VERSION = {
 	PRAAT_DAY
 };
 
-struct PraatVersion* praat_version() {
+PraatVersion praat_version() {
 	return &PRAAT_VERSION;
 }
 
