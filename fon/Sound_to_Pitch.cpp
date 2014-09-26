@@ -518,7 +518,9 @@ Pitch Sound_to_Pitch_any (Sound me,
 			brent_ixmax = nsamp_window * interpolation_depth;
 		}
 
+#ifndef PRAAT_LIB
 		autoMelderProgress progress (L"Sound to Pitch...");
+#endif
 
 		long numberOfFramesPerThread = 20;
 		int numberOfThreads = (nFrames - 1) / numberOfFramesPerThread + 1;
@@ -547,7 +549,10 @@ Pitch Sound_to_Pitch_any (Sound me,
 		}
 		MelderThread_run (Sound_into_Pitch, args, numberOfThreads);
 
+#ifndef PRAAT_LIB
 		Melder_progress (0.95, L"Sound to Pitch: path finder");   // progress (0.95, L"Sound to Pitch: path finder");
+#endif
+
 		Pitch_pathFinder (thee.peek(), silenceThreshold, voicingThreshold,
 			octaveCost, octaveJumpCost, voicedUnvoicedCost, ceiling, Melder_debug == 31 ? true : false);
 

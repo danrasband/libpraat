@@ -1390,11 +1390,76 @@ void praat_init (const char *title, unsigned int argc, char **argv) {
 	trace ("after picture window shows: locale is %s", setlocale (LC_ALL, NULL));
 }
 
+PRAAT_LIB_EXPORT wchar_t* praat_dir() {
+	return praatDir.path;
+}
+
 void praat_lib_init() 
 {
+	const char *title = "Praat";
 	NUMmachar ();
 	NUMinit ();
 	Melder_alloc_init ();
+	Melder_message_init ();
+
+	/*
+	 * Get home directory, e.g. "/home/miep/", or "/Users/miep/", or just "/".
+	 */
+	Melder_getHomeDir (& homeDir);
+	/*
+	 * Get the program's private directory:
+	 *    "/u/miep/.myProg-dir" (Unix)
+	 *    "/Users/miep/Library/Preferences/MyProg Prefs" (Macintosh)
+	 *    "C:\Documents and Settings\Miep\MyProg" (Windows)
+	 * and construct a preferences-file name and a script-buttons-file name like
+	 *    /u/miep/.myProg-dir/prefs5
+	 *    /u/miep/.myProg-dir/buttons5
+	 * or
+	 *    /Users/miep/Library/Preferences/MyProg Prefs/Prefs5
+	 *    /Users/miep/Library/Preferences/MyProg Prefs/Buttons5
+	 * or
+	 *    C:\Documents and Settings\Miep\MyProg\Preferences5.ini
+	 *    C:\Documents and Settings\Miep\MyProg\Buttons5.ini
+	 * On Unix, also create names for process-id and message files.
+	 */
+	{
+		structMelderDir prefParentDir = { { 0 } };   /* Directory under which to store our preferences directory. */
+		wchar_t name [256];
+		Melder_getPrefDir (& prefParentDir);
+		/*
+		 * Make sure that the program's private directory exists.
+		 */
+		#if defined (UNIX)
+			swprintf (name, 256, L".%ls-dir", Melder_utf8ToWcs (title));   /* For example .myProg-dir */
+		#elif defined (macintosh)
+			swprintf (name, 256, L"%ls Prefs", Melder_utf8ToWcs (itle));   /* For example MyProg Prefs */
+		#elif defined (_WIN32)
+			swprintf (name, 256, L"%ls", Melder_utf8ToWcs (title));   /* For example MyProg */
+		#endif
+		#if defined (UNIX) || defined (macintosh)
+			Melder_createDirectory (& prefParentDir, name, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		#else
+			Melder_createDirectory (& prefParentDir, name, 0);
+		#endif
+		MelderDir_getSubdir (& prefParentDir, name, & praatDir);
+		#if defined (UNIX)
+			MelderDir_getFile (& praatDir, L"prefs5", & prefsFile);
+			MelderDir_getFile (& praatDir, L"buttons5", & buttonsFile);
+			MelderDir_getFile (& praatDir, L"pid", & pidFile);
+			MelderDir_getFile (& praatDir, L"message", & messageFile);
+			MelderDir_getFile (& praatDir, L"tracing", & tracingFile);
+		#elif defined (_WIN32)
+			MelderDir_getFile (& praatDir, L"Preferences5.ini", & prefsFile);
+			MelderDir_getFile (& praatDir, L"Buttons5.ini", & buttonsFile);
+			MelderDir_getFile (& praatDir, L"Message.txt", & messageFile);
+			MelderDir_getFile (& praatDir, L"Tracing.txt", & tracingFile);
+		#elif defined (macintosh)
+			MelderDir_getFile (& praatDir, L"Prefs5", & prefsFile);
+			MelderDir_getFile (& praatDir, L"Buttons5", & buttonsFile);
+			MelderDir_getFile (& praatDir, L"Tracing.txt", & tracingFile);
+		#endif
+		Melder_tracingToFile (& tracingFile);
+	}
 }
 
 static void executeStartUpFile (MelderDir startUpDirectory, const wchar_t *fileNameTemplate) {

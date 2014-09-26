@@ -62,6 +62,7 @@ be read by Data_readFromTextFile () and Data_readFromBinaryFile ().
 #endif
 
 PRAAT_LIB_EXPORT void praat_init (const char *title, unsigned int argc, char **argv);
+
 void praat_run (void);
 void praat_setStandAloneScriptText (wchar_t *text);   // call before praat_init if you want to create a stand-alone application without Objects and Picture window
 
